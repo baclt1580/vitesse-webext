@@ -6,3 +6,4 @@ declare module '*.vue' {
   const component: any
   export default component
 }
+const browser: import("webextension-polyfill").Browser;

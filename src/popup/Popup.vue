@@ -1,22 +1,15 @@
 <script setup lang="ts">
-import { storageDemo } from '~/logic/storage'
+import { onMessage } from 'webext-bridge/popup';
 
-function openOptionsPage() {
-  browser.runtime.openOptionsPage()
-}
+onMessage("tab-prev",e=>{
+  console.log("收到消息",e)
+})
+
+
 </script>
 
 <template>
-  <main class="w-[300px] px-4 py-5 text-center text-gray-700">
-    <Logo />
-    <div>Popup</div>
-    <SharedSubtitle />
-
-    <button class="btn mt-2" @click="openOptionsPage">
-      Open Options
-    </button>
-    <div class="mt-2">
-      <span class="opacity-50">Storage:</span> {{ storageDemo }}
-    </div>
-  </main>
+  <p class="text-base text-red-500">
+    hello extension
+  </p>
 </template>
