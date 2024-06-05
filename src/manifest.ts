@@ -38,7 +38,8 @@ export async function getManifest() {
       'tabs',
       'storage',
       'activeTab',
-      'contextMenus'
+      'contextMenus',
+      "notifications"
     ],
     host_permissions: ['*://*/*'],
     content_scripts: [

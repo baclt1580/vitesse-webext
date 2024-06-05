@@ -9,9 +9,17 @@ if (import.meta.hot) {
   import('./contentScriptHMR')
 }
 
-browser.runtime.onInstalled.addListener((): void => {
-  // eslint-disable-next-line no-console
-  console.log('installed')
+browser.runtime.onInstalled.addListener(async () => {
+  setTimeout(() => {
+    console.log(browser.runtime.getURL("assets/icon-512.png"))
+    browser.notifications.create({
+      iconUrl:browser.runtime.getURL("assets/icon-512.png"),
+      title: "测试通知",
+      message: "测试通知",
+      type: 'basic'
+    })
+  }, 3000)
+
 })
 
 
@@ -19,8 +27,8 @@ browser.runtime.onInstalled.addListener((): void => {
 // communication example: send previous tab title from background page
 // see shim.d.ts for type declaration
 browser.tabs.onActivated.addListener(async ({ tabId }) => {
-  
+
   console.log('previous tab', tabId)
-  sendMessage('tab-prev', { title: tabId+""}, 'popup')
+  sendMessage('tab-prev', { title: tabId + "" }, 'popup')
 })
 
