@@ -10,8 +10,9 @@ if (import.meta.hot) {
 }
 
 browser.runtime.onInstalled.addListener(async () => {
+  
   setTimeout(() => {
-    console.log(browser.runtime.getURL("assets/icon-512.png"))
+    sendMessage("test","test123","popup")
     browser.notifications.create({
       iconUrl:browser.runtime.getURL("assets/icon-512.png"),
       title: "测试通知",
