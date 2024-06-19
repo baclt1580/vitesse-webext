@@ -11,6 +11,9 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { isDev, port, r } from './scripts/utils'
 import packageJson from './package.json'
 import tailwindcss from "tailwindcss";
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import postCssPxToRem from "postcss-pxtorem"
+import autoprefixer from 'autoprefixer'
 
 export const sharedConfig: UserConfig = {
   root: r('src'),
@@ -25,14 +28,13 @@ export const sharedConfig: UserConfig = {
   },
   plugins: [
     Vue(),
-
     AutoImport({
       imports: [
         'vue',
         {
           'webextension-polyfill': [
             ['default', 'browser'],
-          ],
+          ]
         },
       ],
       dts: r('src/auto-imports.d.ts'),
@@ -47,14 +49,12 @@ export const sharedConfig: UserConfig = {
         // auto import icons
         IconsResolver({
           prefix: '',
-        }),
+        })
       ],
     }),
 
     // https://github.com/antfu/unplugin-icons
     Icons(),
-
-
     // rewrite assets to use relative path
     {
       name: 'assets-rewrite',
@@ -69,6 +69,15 @@ export const sharedConfig: UserConfig = {
     postcss: {
       plugins: [
         tailwindcss(),
+        postCssPxToRem({
+          rootValue: 16, // 1rem的大小
+          propList: ['*'], // 需要转换的属性，这里选择全部都进行转换
+          replace: true,
+          mediaQuery: false,
+          minPixelValue: 4,
+          exclude: /node_modules|initRemW|initRemH/i,
+        }),
+        autoprefixer()
       ],
     }
   },
@@ -109,6 +118,7 @@ export default defineConfig(({ command }) => ({
       input: {
         options: r('src/options/index.html'),
         popup: r('src/popup/index.html'),
+        content:r('src/contentScripts/index.ts')
       },
     },
   },

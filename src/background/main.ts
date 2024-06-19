@@ -37,12 +37,7 @@ browser.runtime.onInstalled.addListener(async () => {
       
 
       console.log(auth.value.currentUser?.email)
-      browser.notifications.create({
-        iconUrl: browser.runtime.getURL("assets/icon-512.png"),
-        title: "登录成功",
-        message: auth.value.currentUser?.email || "",
-        type: 'basic'
-      })
+   
     }
   }, 3000)
 

@@ -1,3 +1,51 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    * {
+        box-sizing: border-box;
+        margin    : 0;
+        padding   : 0;
+        outline   : none;
+    }
+
+    img {
+        max-width : 100%;
+        object-fit: contain;
+    }
+
+    body {
+        font-size  : 14px;
+        font-family: regular;
+    }
+
+    div,
+    section {
+        background-size  : contain;
+        background-repeat: no-repeat;
+    }
+
+}
+
+@layer utilities {
+    .flex-center {
+        @apply flex justify-center items-center;
+    }
+
+    .clipOneLine {
+        @apply overflow-hidden text-ellipsis whitespace-nowrap;
+    }
+
+    .test-border {
+        @apply border border-red-600 border-solid;
+    }
+
+    .absolute-x-center {
+        @apply absolute right-1/2 translate-x-1/2;
+    }
+
+    .bg-size-full {
+        background-size: 100% 100%;
+    }
+}
