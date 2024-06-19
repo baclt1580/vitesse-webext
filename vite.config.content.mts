@@ -2,7 +2,9 @@ import { defineConfig } from 'vite'
 import { sharedConfig } from './vite.config.mjs'
 import { isDev, r } from './scripts/utils'
 import packageJson from './package.json'
-
+import AutoImport from 'unplugin-auto-import/vite'
+import { NaiveUiResolver } from 'unplugin-vue-components/resolvers'
+import Components from 'unplugin-vue-components/vite'
 // bundling the content script using Vite
 export default defineConfig({
   ...sharedConfig,

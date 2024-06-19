@@ -17,9 +17,6 @@ importers:
       firebase:
         specifier: ^10.12.2
         version: 10.12.2
-      naive-ui:
-        specifier: ^2.38.2
-        version: 2.38.2(vue@3.4.21(typescript@5.4.2))
     devDependencies:
       '@ffflorian/jszip-cli':
         specifier: ^3.6.2
@@ -78,6 +75,9 @@ importers:
       kolorist:
         specifier: ^1.8.0
         version: 1.8.0
+      naive-ui:
+        specifier: ^2.38.2
+        version: 2.38.2(vue@3.4.21(typescript@5.4.2))
       npm-run-all:
         specifier: ^4.1.5
         version: 4.1.5

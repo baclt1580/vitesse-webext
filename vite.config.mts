@@ -34,6 +34,12 @@ export const sharedConfig: UserConfig = {
         {
           'webextension-polyfill': [
             ['default', 'browser'],
+          ],
+          'naive-ui': [
+            'useDialog',
+            'useMessage',
+            'useNotification',
+            'useLoadingBar'
           ]
         },
       ],
@@ -49,7 +55,8 @@ export const sharedConfig: UserConfig = {
         // auto import icons
         IconsResolver({
           prefix: '',
-        })
+        }),
+        NaiveUiResolver()
       ],
     }),
 
@@ -118,7 +125,7 @@ export default defineConfig(({ command }) => ({
       input: {
         options: r('src/options/index.html'),
         popup: r('src/popup/index.html'),
-        content:r('src/contentScripts/index.ts')
+        content: r('src/contentScripts/index.ts')
       },
     },
   },
