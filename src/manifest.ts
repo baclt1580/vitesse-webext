@@ -47,6 +47,7 @@ export async function getManifest() {
         matches: [
           '<all_urls>',
         ],
+        "exclude_matches": ["*://localhost/*"],  // 排除 example.com
         js: [
           'dist/contentScripts/index.global.js',
         ],

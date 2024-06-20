@@ -20,4 +20,5 @@ import 'vfonts/Lato.css'
   const app = createApp(App)
   setupApp(app)
   app.mount(container)
+  console.log("加载完毕")
 })()
