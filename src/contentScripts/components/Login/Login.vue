@@ -8,7 +8,7 @@ import {CloseFilled} from "@vicons/material"
         v-if="visibles.login"
         >
             <div class="flex justify-center items-center flex-col bg-[#EDDCD9] border-2 border-[#264143] rounded-2xl shadow-[3px_4px_0px_1px_#E99F4C] p-6 relative">
-                <p class="text-[#264143] font-black text-xl mt-5"></p>
+                <p class="text-[#264143] font-black text-xl mt-5">登录</p>
                 <n-icon :size="24" class="absolute right-4 top-4 cursor-pointer" @click="visibles.login=false">
                     <CloseFilled></CloseFilled>
                 </n-icon>
