@@ -5,7 +5,7 @@ import Register from "./components/Register/Register.vue";
 
 </script>
 <template>
-   <div>
+   <div id="application">
       <Menu></Menu>
       <Login></Login>
       <Register></Register>
