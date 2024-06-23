@@ -4,7 +4,7 @@ import { CloseFilled } from "@vicons/material"
 
 </script>
 <template>
-    <div class="flex items-center justify-center flex-col text-center bg-[#ffffff75] absolute left-0 top-0 w-full h-full z-[99]"
+    <div class="flex items-center justify-center flex-col text-center bg-[#ffffff75] fixed left-0 top-0 w-full h-[100vh] z-[99]"
         v-if="visibles.register">
         <div
             class="relative flex justify-center items-center flex-col bg-[#EDDCD9] border-2 border-[#264143] rounded-2xl shadow-[3px_4px_0px_1px_#E99F4C] p-6">

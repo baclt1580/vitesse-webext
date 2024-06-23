@@ -5,6 +5,7 @@ import { setupApp } from '~/logic/common-setup'
 import "~/styles/tailwind.css"
 import 'vfonts/Lato.css'
 import { onMessage } from 'webext-bridge/content-script'
+import "normalize.css";
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
   console.info('[vitesse-webext] Hello world from content script')

@@ -1,8 +1,11 @@
+import { TextNode } from "../translator/Translate.abstract";
+
 export async function sendOpenAiMessage(msg: string,systemMsg?:string) {
     let payload = {
         model: "gpt-3.5-turbo-0125",
         "messages": [
-            { "role": "user", "content": "你好" }
+            {"role":"system","content":systemMsg},
+            { "role": "user", "content": msg }
         ],
         "temperature": 0.8
     }
@@ -28,3 +31,30 @@ export async function sendOpenAiMessage(msg: string,systemMsg?:string) {
         return null
     }
 }
+
+export function splitContentsByLength(objects: TextNode[], maxLength: number = 600): TextNode[][] {
+    const result: TextNode[][] = [];
+    let currentBatch: TextNode[] = [];
+    let currentLength: number = 0;
+  
+    for (const obj of objects) {
+      // 如果当前批次加上当前对象会超过最大长度，则保存当前批次并开始新的批次
+      if (currentLength + obj.content.length > maxLength) {
+        result.push(currentBatch);
+        currentBatch = [];
+        currentLength = 0;
+      }
+  
+      // 将当前对象添加到当前批次
+      currentBatch.push(obj);
+      currentLength += obj.content.length;
+    }
+  
+    // 不要忘记在结束时添加最后一个批次
+    if (currentBatch.length > 0) {
+      result.push(currentBatch);
+    }
+  
+    return result;
+  }
+  

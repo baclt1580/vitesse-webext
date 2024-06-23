@@ -1,5 +1,8 @@
-import { sendMessage } from 'webext-bridge/background'
+import { sendMessage,onMessage } from 'webext-bridge/background'
 import {sendOpenAiMessage} from "./utils/openai.util"
+import { translators } from './state/translators'
+import { GPTTranslator } from './translator/GPTTranslator'
+import { init } from './init/init'
 // only on dev mode
 if (import.meta.hot) {
   // @ts-expect-error for background HMR
@@ -17,7 +20,6 @@ if (import.meta.hot) {
 //   }
 // })
 browser.runtime.onInstalled.addListener(async () => {
-  let msg=await sendOpenAiMessage("hello")
-  console.log("gpt:",msg);
-})
+ init()
 
+})

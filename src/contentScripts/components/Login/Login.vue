@@ -3,7 +3,8 @@ import { visibles } from '~/contentScripts/state/visible';
 import { CloseFilled } from "@vicons/material"
 </script>
 <template>
-    <div class="flex items-center justify-center flex-col text-center bg-[#ffffff75] absolute left-0 top-0 w-full h-full z-[999]"
+    <html>
+    <div class="flex items-center justify-center flex-col text-center bg-[#ffffff75] fixed left-0 top-0 w-full h-[100vh] z-[999]"
         v-if="visibles.login">
         <div
             class="flex justify-center items-center flex-col bg-[#EDDCD9] border-2 border-[#264143] rounded-2xl shadow-[3px_4px_0px_1px_#E99F4C] p-6 relative">
@@ -34,6 +35,9 @@ import { CloseFilled } from "@vicons/material"
             </form>
         </div>
     </div>
+
+    </html>
+
 </template>
 
 <script lang='ts'>

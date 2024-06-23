@@ -76,14 +76,14 @@ export const sharedConfig: UserConfig = {
     postcss: {
       plugins: [
         tailwindcss(),
-        postCssPxToRem({
-          rootValue: 16, // 1rem的大小
-          propList: ['*'], // 需要转换的属性，这里选择全部都进行转换
-          replace: true,
-          mediaQuery: false,
-          minPixelValue: 4,
-          exclude: /node_modules|initRemW|initRemH/i,
-        }),
+        // postCssPxToRem({
+        //   rootValue: 16, // 1rem的大小
+        //   propList: ['*'], // 需要转换的属性，这里选择全部都进行转换
+        //   replace: true,
+        //   mediaQuery: false,
+        //   minPixelValue: 4,
+        //   exclude: /node_modules|initRemW|initRemH/i,
+        // }),
         autoprefixer()
       ],
     }

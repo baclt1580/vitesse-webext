@@ -1,31 +1,9 @@
 <script lang='ts' setup>
+import { ReplaceTranslator } from '~/contentScripts/render/ReplaceTranslator.translator';
 import { visibles } from '~/contentScripts/state/visible';
-function translate() {
-    const treeWalker = document.createTreeWalker(
-        document.body, // 根节点
-        NodeFilter.SHOW_TEXT, // 只显示文本节点
-        {
-            acceptNode(node) {
-                // 过滤掉只包含空白字符的文本节点
-                if (node.nodeValue?.trim()) {
-                    return NodeFilter.FILTER_ACCEPT;
-                }
-                return NodeFilter.FILTER_REJECT;
-            }
-        }
-    );
-
-    // 存储文本节点的数组
-    const textNodes = [];
-
-    // 遍历所有的文本节点
-    while (treeWalker.nextNode()) {
-        textNodes.push(treeWalker.currentNode);
-    }
-    // 输出所有的文本节点
-    textNodes.forEach(node => {
-        console.dir(node);
-    });
+let translator=new ReplaceTranslator();
+function doTranslate(){
+    translator.translate()
 }
 </script>
 <template>
@@ -62,7 +40,7 @@ function translate() {
                         <div data-projection-id="2">
                             <button
                                 class="m-0.5 flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-full border border-blue-gray-50 bg-white p-1 font-normal transition-transform duration-300 ease-in-out hover:scale-110 focus:scale-110 active:scale-100"
-                                @click="translate">
+                                @click="doTranslate">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round"
