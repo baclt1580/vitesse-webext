@@ -37,6 +37,7 @@ export class ReplaceTranslator implements Translator {
     }
     //翻译
     translate() {
+        
         this.render();
         translateVisibleText();
         cancelTranslate=onScrollDown(translateVisibleText)
