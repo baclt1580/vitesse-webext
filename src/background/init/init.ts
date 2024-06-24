@@ -11,6 +11,7 @@ function initTranslator() {
     translators.set("gpt", new GPTTranslator())
     onMessage("translate", async (e) => {
         console.log("收到翻译请求",e)
+       
         let data= e.data as {
             type:string,
             textNodes:TextNode[]
@@ -22,9 +23,9 @@ function initTranslator() {
         let translator = translators.get("gpt")
         if (translator) {
             let tabId=e.sender.tabId;
-            console.log("tabId1",tabId)
+           
              translator.translate(data.textNodes,res=>{
-                console.log("tabId2",tabId)
+                console.log("type",data.type)
                 sendMessage("translate_result",{type:data.type,textNodes:res},`content-script@${tabId}`)
              },{ url: "" });
         }
