@@ -1,9 +1,38 @@
 <script lang='ts' setup>
 import { ReplaceTranslator } from '~/contentScripts/render/ReplaceTranslator.translator';
+import { getVisibleTextNodes, isConnectableNode } from '~/contentScripts/render/translator.util';
 import { visibles } from '~/contentScripts/state/visible';
 let translator=new ReplaceTranslator();
 function doTranslate(){
     translator.translate()
+}
+
+function test(){
+    let texts=getVisibleTextNodes()
+    texts.forEach(e=>{
+        let el=getSection(e)
+        if(!el){
+            console.dir(e)
+        }else{
+            console.log(el)
+        }
+    })
+}
+//块
+function getSection(node:Node){
+    let currentEl:HTMLElement|null=node.parentElement
+    while(currentEl&&isConnectableNode(currentEl)){
+        currentEl=currentEl.parentElement;
+    }
+    // if(!currentEl){
+    //     let el=document.createElement('div');
+    //     el.style.position="relative";
+    //     el.style.display="inline-block";
+    //     el.appendChild(node)
+    //     currentEl=el;
+    // }
+
+    return currentEl;
 }
 </script>
 <template>
@@ -40,7 +69,7 @@ function doTranslate(){
                         <div data-projection-id="2">
                             <button
                                 class="m-0.5 flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-full border border-blue-gray-50 bg-white p-1 font-normal transition-transform duration-300 ease-in-out hover:scale-110 focus:scale-110 active:scale-100"
-                                @click="doTranslate">
+                                @click="test">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round"
