@@ -2,27 +2,52 @@
 import { ReplaceTranslator } from '~/contentScripts/render/ReplaceTranslator.translator';
 import { getVisibleTextNodes, isConnectableNode } from '~/contentScripts/render/translator.util';
 import { visibles } from '~/contentScripts/state/visible';
-let translator=new ReplaceTranslator();
-function doTranslate(){
-    translator.translate()
+let translator = new ReplaceTranslator();
+function doTranslate() {
+    translator.translate();
 }
-
-function test(){
-    let texts=getVisibleTextNodes()
-    texts.forEach(e=>{
-        let el=getSection(e)
-        if(!el){
-            console.dir(e)
-        }else{
-            console.log(el)
+let dealedText: Text[] = []
+function test() {
+    let texts = getVisibleTextNodes()
+    texts.forEach(textNode => {
+        if (dealedText.includes(textNode)) return;
+        let el = getSection(textNode)
+        if (!el) return;
+        //找到有文本节点或有字可连接节点,然后开始连接
+        let contactableWithText = Array.from(el.childNodes).find(node => {
+            return node.nodeType == Node.TEXT_NODE || (node.nodeType == Node.ELEMENT_NODE && node.textContent?.trim().length)
+        })
+        if (!contactableWithText) return;
+        //相邻可连接一直到不可连接
+        let contactables: Node[] = [contactableWithText];
+        let nextNode = contactableWithText.nextSibling;
+        while (nextNode && isConnectableNode(nextNode)) {
+            contactables.push(nextNode);
+            nextNode = nextNode.nextSibling
+        }
+        //包裹
+        let wrapper = document.createElement("div")
+        wrapper.style.position = "relative";
+        wrapper.style.display = "inline-block";
+        wrapper.style.border= "1px solid red";
+        el.replaceChild(wrapper, contactableWithText);
+        contactables.forEach(node => {
+            wrapper.appendChild(node)
+        })
+        //标记
+        let walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT)
+        while (walker.nextNode()) {
+            console.log("标记", walker.currentNode.nodeValue)
+            dealedText.push(walker.currentNode as Text);
         }
     })
 }
+
 //块
-function getSection(node:Node){
-    let currentEl:HTMLElement|null=node.parentElement
-    while(currentEl&&isConnectableNode(currentEl)){
-        currentEl=currentEl.parentElement;
+function getSection(node: Node) {
+    let currentEl: HTMLElement | null = node.parentElement
+    while (currentEl && isConnectableNode(currentEl)) {
+        currentEl = currentEl.parentElement;
     }
     // if(!currentEl){
     //     let el=document.createElement('div');

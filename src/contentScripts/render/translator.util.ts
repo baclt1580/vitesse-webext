@@ -57,7 +57,7 @@ export function onScrollDown(callback: () => void): () => void {
     };
 }
 
-export function isConnectableNode(node: Text | HTMLElement) {
+export function isConnectableNode(node: Node) {
     if (node.nodeType != Node.TEXT_NODE && node.nodeType != Node.ELEMENT_NODE) return false;
     if (node.nodeType == Node.TEXT_NODE) return true;
     let el = node as HTMLElement;
@@ -71,10 +71,16 @@ export function isConnectableNode(node: Text | HTMLElement) {
             if (computedStyle.getPropertyValue("display") == "inline") return true;
             //2.inline-block
             if (computedStyle.getPropertyValue("display") == "inline-block" || (parentDisplay == "flex" && computedStyle.getPropertyValue("display") == "block")) {
-                let preEl = el.previousElementSibling as HTMLElement;
-                let preComputedStyle = getComputedStyle(preEl);
-                let diffHeight = parseInt(computedStyle.height) - parseInt(preComputedStyle.height)
-                if (diffHeight < parseInt(preComputedStyle.height) && parseInt(computedStyle.getPropertyValue("margin-left")) < 15) return true;
+                let preEl = el.previousElementSibling as HTMLElement||el.nextElementSibling as HTMLElement;;
+                if (preEl) {
+                    let preComputedStyle = getComputedStyle(preEl);
+                    let diffHeight = parseInt(computedStyle.height) - parseInt(preComputedStyle.height)
+                    if (diffHeight < parseInt(preComputedStyle.height) && parseInt(computedStyle.getPropertyValue("margin-left")) < 10 && parseInt(computedStyle.getPropertyValue("margin-right")) < 10 && parseInt(computedStyle.getPropertyValue("padding-left")) < 10 && parseInt(computedStyle.getPropertyValue("padding-right")) < 10) return true;
+                } else {
+                    
+                    return true;
+                }
+
             }
         }
     }
