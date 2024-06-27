@@ -1,6 +1,6 @@
 <script lang='ts' setup>
 import { ReplaceTranslator } from '~/contentScripts/render/ReplaceTranslator.translator';
-import { getVisibleTextNodes, isConnectableNode } from '~/contentScripts/render/translator.util';
+import { getVisibleElements, getVisibleTextNodes, isConnectableNode } from '~/contentScripts/render/translator.util';
 import { visibles } from '~/contentScripts/state/visible';
 let translator = new ReplaceTranslator();
 function doTranslate() {
@@ -11,6 +11,7 @@ function test() {
     let texts = getVisibleTextNodes()
     texts.forEach(textNode => {
         if (dealedText.includes(textNode)) return;
+        console.log(textNode.nodeValue)
         let el = getSection(textNode)
         if (!el) return;
         //找到有文本节点或有字可连接节点,然后开始连接
@@ -29,7 +30,9 @@ function test() {
         let wrapper = document.createElement("div")
         wrapper.style.position = "relative";
         wrapper.style.display = "inline-block";
-        wrapper.style.border= "1px solid red";
+        wrapper.style.border = "1px solid red";
+        wrapper.style.paddingBottom = "30px";
+        wrapper.dataset.isWrapper = "isWrapper"
         el.replaceChild(wrapper, contactableWithText);
         contactables.forEach(node => {
             wrapper.appendChild(node)
@@ -37,12 +40,46 @@ function test() {
         //标记
         let walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT)
         while (walker.nextNode()) {
-            console.log("标记", walker.currentNode.nodeValue)
+
             dealedText.push(walker.currentNode as Text);
         }
     })
 }
-
+let dealedEls: HTMLElement[] = []
+function test2() {
+    let elements = getVisibleElements()
+    console.log("elements",elements)
+    elements.forEach(el => {
+        if (dealedEls.includes(el)) return;
+        let contactableWithText = Array.from(el.childNodes).find(node => {
+            return node.nodeType == Node.TEXT_NODE || (node.nodeType == Node.ELEMENT_NODE && node.textContent?.trim().length)
+        })
+        if (!contactableWithText) return;
+        //相邻可连接一直到不可连接
+        let contactables: Node[] = [contactableWithText];
+        let nextNode = contactableWithText.nextSibling;
+        while (nextNode && isConnectableNode(nextNode)) {
+            contactables.push(nextNode);
+            nextNode = nextNode.nextSibling
+        }
+        //包裹
+        let wrapper = document.createElement("div")
+        wrapper.style.position = "relative";
+        wrapper.style.display = "inline-block";
+        wrapper.style.border = "1px solid red";
+        wrapper.style.paddingBottom = "30px";
+        wrapper.dataset.isWrapper = "isWrapper"
+        el.replaceChild(wrapper, contactableWithText);
+        contactables.forEach(node => {
+            wrapper.appendChild(node)
+        })
+        //标记
+        let walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_ELEMENT)
+        while (walker.nextNode()) {
+            dealedEls.push(walker.currentNode as HTMLElement);
+        }
+    })
+}
 //块
 function getSection(node: Node) {
     let currentEl: HTMLElement | null = node.parentElement
@@ -94,7 +131,7 @@ function getSection(node: Node) {
                         <div data-projection-id="2">
                             <button
                                 class="m-0.5 flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-full border border-blue-gray-50 bg-white p-1 font-normal transition-transform duration-300 ease-in-out hover:scale-110 focus:scale-110 active:scale-100"
-                                @click="test">
+                                @click="test2">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round"
