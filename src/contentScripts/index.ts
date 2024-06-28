@@ -4,18 +4,9 @@ import App from './App.vue'
 import { setupApp } from '~/logic/common-setup'
 import "~/styles/tailwind.css"
 import 'vfonts/Lato.css'
-import { onMessage } from 'webext-bridge/content-script'
 import "normalize.css";
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
-  console.info('[vitesse-webext] Hello world from content script')
-
-  // communication example: send previous tab title from background page
-  onMessage('tab-prev', ({ data }) => {
-    console.log(`[vitesse-webext] Navigate from page "${data.title}"`)
-  })
-
-  // mount component to context window
   const container = document.createElement('div')
   container.id = __NAME__
   const root = document.createElement('div')

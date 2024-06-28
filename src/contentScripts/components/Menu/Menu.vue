@@ -1,105 +1,16 @@
 <script lang='ts' setup>
 import { ReplaceTranslator } from '~/contentScripts/render/ReplaceTranslator.translator';
-import { getVisibleElements, getVisibleTextNodes, isConnectableNode } from '~/contentScripts/render/translator.util';
 import { visibles } from '~/contentScripts/state/visible';
 let translator = new ReplaceTranslator();
 function doTranslate() {
     translator.translate();
 }
-let dealedText: Text[] = []
-function test() {
-    let texts = getVisibleTextNodes()
-    texts.forEach(textNode => {
-        if (dealedText.includes(textNode)) return;
-        console.log(textNode.nodeValue)
-        let el = getSection(textNode)
-        if (!el) return;
-        //找到有文本节点或有字可连接节点,然后开始连接
-        let contactableWithText = Array.from(el.childNodes).find(node => {
-            return node.nodeType == Node.TEXT_NODE || (node.nodeType == Node.ELEMENT_NODE && node.textContent?.trim().length)
-        })
-        if (!contactableWithText) return;
-        //相邻可连接一直到不可连接
-        let contactables: Node[] = [contactableWithText];
-        let nextNode = contactableWithText.nextSibling;
-        while (nextNode && isConnectableNode(nextNode)) {
-            contactables.push(nextNode);
-            nextNode = nextNode.nextSibling
-        }
-        //包裹
-        let wrapper = document.createElement("div")
-        wrapper.style.position = "relative";
-        wrapper.style.display = "inline-block";
-        wrapper.style.border = "1px solid red";
-        wrapper.style.paddingBottom = "30px";
-        wrapper.dataset.isWrapper = "isWrapper"
-        el.replaceChild(wrapper, contactableWithText);
-        contactables.forEach(node => {
-            wrapper.appendChild(node)
-        })
-        //标记
-        let walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_TEXT)
-        while (walker.nextNode()) {
 
-            dealedText.push(walker.currentNode as Text);
-        }
-    })
-}
-let dealedEls: HTMLElement[] = []
-function test2() {
-    let elements = getVisibleElements()
-    console.log("elements",elements)
-    elements.forEach(el => {
-        if (dealedEls.includes(el)) return;
-        let contactableWithText = Array.from(el.childNodes).find(node => {
-            return node.nodeType == Node.TEXT_NODE || (node.nodeType == Node.ELEMENT_NODE && node.textContent?.trim().length)
-        })
-        if (!contactableWithText) return;
-        //相邻可连接一直到不可连接
-        let contactables: Node[] = [contactableWithText];
-        let nextNode = contactableWithText.nextSibling;
-        while (nextNode && isConnectableNode(nextNode)) {
-            contactables.push(nextNode);
-            nextNode = nextNode.nextSibling
-        }
-        //包裹
-        let wrapper = document.createElement("div")
-        wrapper.style.position = "relative";
-        wrapper.style.display = "inline-block";
-        wrapper.style.border = "1px solid red";
-        wrapper.style.paddingBottom = "30px";
-        wrapper.dataset.isWrapper = "isWrapper"
-        el.replaceChild(wrapper, contactableWithText);
-        contactables.forEach(node => {
-            wrapper.appendChild(node)
-        })
-        //标记
-        let walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_ELEMENT)
-        while (walker.nextNode()) {
-            dealedEls.push(walker.currentNode as HTMLElement);
-        }
-    })
-}
-//块
-function getSection(node: Node) {
-    let currentEl: HTMLElement | null = node.parentElement
-    while (currentEl && isConnectableNode(currentEl)) {
-        currentEl = currentEl.parentElement;
-    }
-    // if(!currentEl){
-    //     let el=document.createElement('div');
-    //     el.style.position="relative";
-    //     el.style.display="inline-block";
-    //     el.appendChild(node)
-    //     currentEl=el;
-    // }
 
-    return currentEl;
-}
+
 </script>
 <template>
-
-    <div class="size-[80px] fixed bottom-8 right-8 p-2 flex items-end justify-end z-[98]">
+    <div class="size-[80px] fixed bottom-8 right-8 p-2 flex items-end justify-end z-[9999]">
         <div class="relative w-full h-80">
             <div class="absolute bottom-0 right-0">
                 <div class="group ">

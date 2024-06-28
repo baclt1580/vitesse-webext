@@ -1,78 +1,63 @@
 import { onMessage, sendMessage } from "webext-bridge/content-script";
 import { Translator } from "./Translator.interface";
 import { TextNode } from "~/background/translator/Translate.abstract";
-import { v4 as uuidv4 } from 'uuid';
-import { getVisibleTextNodes, onScrollDown } from "./translator.util";
-/**
- * 直接替换
- */
-export type ContentNode = {
-    mark: string
-    node: Text,
-    //原文
-    origin: string | null,
-    //译文
-    translated: string | null,
-    rendered: boolean
-}
-export const contentNodes: Ref<ContentNode[]> = ref([]);
-let cancelTranslate:(()=>void)|null=null;
-export class ReplaceTranslator implements Translator {
-    constructor() {
+import { onScrollDown } from "./translator.util";
+import { createElementFromHTML, generateWrappers } from "./wrapper.util";
+import { Md5 } from "ts-md5";
+import langs from 'langs-es';
+
+type showMode = 'replace' | 'bottom' | 'origin';
+type rangeMode = "all" | "visible" | "manual";
+export class NormalTranslator {
+    translateItems: TranlateItem[] = [];
+    cancelTranslate: (() => void) | null = null;
+    //默认显示模式
+    defaultShowMode: showMode = 'bottom';
+    //范围模式
+    rangeMode: rangeMode = 'visible';
+
+    init() {
         onMessage("translate_result", e => {
             let data = e.data as { type: string, textNodes: TextNode[] };
             if (data.type != "replace") return;
             data.textNodes.forEach(textNode => {
-                let contentNode = contentNodes.value.find(item => {
-                    return item.mark == textNode.mark
+                let translateItem = this.translateItems.find(item => {
+                    return item.hash == textNode.mark
                 })
-                if (!contentNode) {
+                if (!translateItem) {
                     console.warn("未找到匹配的node")
                     return;
                 }
-                contentNode.translated = textNode.content;
+                translateItem.translated = createElementFromHTML(textNode.content) as HTMLElement;
             })
-            this.render()
+            this.renderTranslated()
         })
-    }
-    //翻译
-    translate() {
-        
-        this.render();
-        translateVisibleText();
-        cancelTranslate=onScrollDown(translateVisibleText)
-        function translateVisibleText() {
-            let nodes = getVisibleTextNodes().filter(node=>contentNodes.value.findIndex(item=>item.node.isSameNode(node))<0);
-            let textNodes: TextNode[] = nodes.map((node) => {
-                let textNode = {
-                    mark: uuidv4(),
-                    content: node.nodeValue as string
-                };
-                contentNodes.value.push({
-                    mark: textNode.mark,
-                    node: node as Text,
-                    origin: node.nodeValue,
-                    translated: null,
-                    rendered: false,
-                })
-                return textNode;
-            });
-            sendMessage("translate", { type: "replace", textNodes }, "background")
-        }
     }
 
-    revert() {
-        if(cancelTranslate)cancelTranslate();
-        contentNodes.value.forEach(item => {
-            if (item.node.nodeValue != item.origin) {
-                item.node.nodeValue = item.origin
+    toggleMode(mode: 1 | 2 | 3): void {
+        throw new Error("Method not implemented.");
+    }
+    translateVisible() {
+        let wrappers = generateWrappers();
+        let items: TranlateItem[] = wrappers.map(wrapper => {
+            return {
+                hash: Md5.hashStr(wrapper.outerHTML),
+                origin: wrapper,
+                translated: null,
+                rendered: false
             }
-            item.rendered = false;
         })
+
+        this.translateItems.push(...items);
+        let textNodes = items.map(item => ({
+            mark: item.hash,
+            content: item.origin.outerHTML
+        }));
+        sendMessage("translate", { type: "replace", textNodes }, "background");
     }
     //渲染翻译完的
-    private render() {
-        contentNodes.value.filter(item => item.translated != null).forEach(contentNode => {
+    private renderTranslated() {
+        this.translateItems.filter(item => item.translated != null).forEach(contentNode => {
             contentNode.rendered = true
             if (contentNode && contentNode.node.nodeValue != contentNode.translated) {
                 contentNode.node.nodeValue = contentNode.translated;
@@ -80,3 +65,75 @@ export class ReplaceTranslator implements Translator {
         })
     }
 }
+
+export type TranslatorSetting = {
+    defaultShowMode: showMode,
+    rangeMode: rangeMode,
+    from?: Language,
+    to?: Language
+}
+type TranlateItem = {
+    hash: string
+    origin: HTMLElement,
+    translated: HTMLElement | null,
+    showMode?: showMode,
+    rendered: boolean
+}
+
+//设置
+export const settings: Ref<TranslatorSetting> = ref({
+    defaultShowMode: "bottom",
+    rangeMode: "visible",
+    from: undefined,
+    to: langs.where(1, "zh")
+})
+
+
+const translateItems: Ref<TranlateItem[]> = ref([])
+
+const unTranslated = computed(() => {
+    return translateItems.value.filter(item => !item.translated)
+})
+const unRendered = computed(() => {
+    return translateItems.value.filter(item => item.translated && !item.rendered)
+})
+
+//正在翻译
+let translating = ref(false);
+
+export function init() {
+    onMessage("translate_result", e => {
+        if (!translating.value) return;
+        let data = e.data as { type: string, textNodes: TextNode[] };
+        if (data.type != "replace") return;
+        data.textNodes.forEach(textNode => {
+            let translateItem = translateItems.value.find(item => {
+                return item.hash == textNode.mark
+            })
+            if (!translateItem) {
+                console.warn("未找到匹配的node")
+                return;
+            }
+            translateItem.translated = createElementFromHTML(textNode.content) as HTMLElement;
+        })
+    })
+    watch(unRendered, v => {
+        v.forEach(item => {
+            item.origin
+        })
+    })
+
+    function render(item: TranlateItem) {
+        let showMode=item.showMode||settings.value.defaultShowMode;
+        if(showMode=="origin"){
+            
+        }
+        unRendered.value
+    }
+}
+export function toggle() {
+
+}
+
+
+
