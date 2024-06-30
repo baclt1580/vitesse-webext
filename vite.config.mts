@@ -125,7 +125,8 @@ export default defineConfig(({ command }) => ({
       input: {
         options: r('src/options/index.html'),
         popup: r('src/popup/index.html'),
-        content: r('src/contentScripts/index.ts')
+        content: r('src/contentScripts/index.ts'),
+        sidepanel: r('src/sidepanel/index.html')
       },
     },
   },
