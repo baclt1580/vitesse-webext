@@ -1,5 +1,6 @@
 import { catchError, firstValueFrom, from, of, retry, timeout } from "rxjs";
 import { fromFetch } from 'rxjs/fetch';
+import { config } from "../config/config";
 export async function sendOpenAiMessage(msg: string, systemMsg?: string) {
     let payload = {
         model: "gpt-3.5-turbo-0125",
@@ -10,10 +11,10 @@ export async function sendOpenAiMessage(msg: string, systemMsg?: string) {
         "temperature": 0.8
     }
     try {
-        let observable = fromFetch("https://api.gpt.ge/v1/chat/completions", {
+        let observable = fromFetch(config.gpt.baseUrl, {
             method: "post",
             headers: {
-                Authorization: "Bearer sk-GAW4QnZ6MJP6R4gkEd550469FeF94f87Ad7f5f623bAb3a03",
+                Authorization: `Bearer ${config.gpt.key}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload)

@@ -34,3 +34,4 @@ interface Language {
    */
   scope: 'I' | 'M' | 'S';
 }
+const chrome:import ("@types/chrome")

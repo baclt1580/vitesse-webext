@@ -6,6 +6,7 @@ import { AbstranctTranslator, TextNode } from "./Translate.abstract";
 let prompt = `
     把数据的内容翻译成中文,有以下要求:
     1.文本由@#分开,翻译后也一样用@#分开,不用翻译的直接返回原文,数量不要多或者少
+    2.直接返回答案，不要多余解释。
 `;
 
 @singleton()
