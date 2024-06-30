@@ -1,9 +1,10 @@
 
-let elements = getVisibleElements();
+
 let dealedEls: HTMLElement[] = [];
 
 /**可见范围元素生成wrapper并返回 */
 export function generateWrappers(generateWrapper?: () => HTMLElement) {
+    let elements = getVisibleElements();
     let wrappers = elements.map(el => {
         if (dealedEls.includes(el)) return;
         let contactableWithText = Array.from(el.childNodes).find(node => {
@@ -41,9 +42,8 @@ function isConnectableNode(node: Node) {
     if (node.nodeType != Node.TEXT_NODE && node.nodeType != Node.ELEMENT_NODE) return false;
     if (node.nodeType == Node.TEXT_NODE) return true;
     let el = node as HTMLElement;
-    if (el.dataset.isWrapper == "isWrapper") return false;
-    if (el.tagName.toLowerCase() === 'code') return false;
     let computedStyle = getComputedStyle(el);
+    if (el.dataset.isWrapper == "isWrapper") return false;
     if (computedStyle.getPropertyValue("display") == "inline") return true;
     if (computedStyle.getPropertyValue("display") == "inline-block") return true;
     return false
@@ -59,7 +59,10 @@ export function getVisibleElements(): HTMLElement[] {
         NodeFilter.SHOW_ELEMENT,
         {
             acceptNode: (node: HTMLElement) => {
-                if (node.tagName.toLowerCase() == "code") return NodeFilter.FILTER_REJECT;
+                if (node.tagName.toLowerCase().includes("code")) return NodeFilter.FILTER_REJECT;
+                if (node.tagName.toLowerCase().includes("script")) return NodeFilter.FILTER_REJECT;
+                if (node.tagName.toLowerCase().includes("style")) return NodeFilter.FILTER_REJECT;
+                if (node.tagName.toLowerCase().includes("link")) return NodeFilter.FILTER_REJECT;
                 if (node.dataset.isWrapper == "isWrapper") return NodeFilter.FILTER_REJECT;
                 let isVisible = isElementInViewport(node as HTMLElement);
                 let index = Array.from(node.childNodes).findIndex(node => {

@@ -1,7 +1,7 @@
 import { chunk } from "lodash-es"
 
 export type TextNode = {
-    mark: string,
+    hash: string,
     content: string
 }
 //翻译上下文
@@ -11,12 +11,14 @@ export type TranslateContext={
 }
 
 export interface Translator{
-    translate(originArr: TextNode[],cb:(res:TextNode[])=>void,context:TranslateContext):void
+    name:string
+    translate(originArr: TextNode[]):Promise<TextNode[]>
 }
 
 export abstract class AbstranctTranslator implements Translator {
-    async translate(originArr: TextNode[],cb:(res:TextNode[])=>void,context:TranslateContext) {
-         this.doTranslate(originArr,cb)
+    abstract name:string
+    async translate(originArr: TextNode[]) {
+         return this.doTranslate(originArr)
     }
-    abstract doTranslate(originArr: TextNode[],cb:(res:TextNode[])=>void):void;
+    abstract doTranslate(originArr: TextNode[]):Promise<TextNode[]>;
 }

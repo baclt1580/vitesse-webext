@@ -1,8 +1,6 @@
-import { sendMessage,onMessage } from 'webext-bridge/background'
-import {sendOpenAiMessage} from "./utils/openai.util"
-import { translators } from './state/translators'
-import { GPTTranslator } from './translator/GPTTranslator'
-import { init } from './init/init'
+import "reflect-metadata";
+import { initContainer } from "./ioc/container";
+import { translateController } from "./controller/tranlate.controller";
 // only on dev mode
 if (import.meta.hot) {
   // @ts-expect-error for background HMR
@@ -20,6 +18,7 @@ if (import.meta.hot) {
 //   }
 // })
 browser.runtime.onInstalled.addListener(async () => {
- init()
+  initContainer()
+  translateController()
 
 })
