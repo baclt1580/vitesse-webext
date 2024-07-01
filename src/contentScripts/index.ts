@@ -5,6 +5,7 @@ import { setupApp } from '~/logic/common-setup'
 import "~/styles/tailwind.css"
 import 'vfonts/Lato.css'
 import "normalize.css";
+import { controller } from './controller/controller'
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
   const container = document.createElement('div')
@@ -20,4 +21,5 @@ import "normalize.css";
   const app = createApp(App)
   setupApp(app)
   app.mount(root)
+  controller()
 })()
