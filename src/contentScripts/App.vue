@@ -2,7 +2,10 @@
 import Menu from "./components/Menu/Menu.vue"
 import Login from "./components/Login/Login.vue";
 import Register from "./components/Register/Register.vue";
-
+import { status } from "./state/status.state";
+onMounted(()=>{
+   status.value="success"
+})
 </script>
 <template>
    <div id="wt_application">
