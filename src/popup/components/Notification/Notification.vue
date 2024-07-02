@@ -2,8 +2,8 @@
 
 </script>
 <template>
-  <div class="notification transition-transform duration-75">
-    <img src="./assets/img/notification.svg" class="w-full" alt="通知">
+  <div class="btn-animation">
+    <img src="./assets/img/notification.svg" class="w-full" title="通知">
   </div>
 
 </template>
@@ -17,11 +17,7 @@ export default {
 </script>
 
 <style scoped>
-.notification:hover {
-  transform: scale(1.1)
-  
- 
-}
+
 
 
 </style>

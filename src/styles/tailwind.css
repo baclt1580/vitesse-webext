@@ -48,4 +48,7 @@
     .bg-size-full {
         background-size: 100% 100%;
     }
+    .btn-animation{
+        @apply transition-transform duration-75  active:scale-95;
+    }
 }

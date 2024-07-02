@@ -16,7 +16,7 @@ async function toLogin() {
         <span class="text-sm">登录</span>
       </YellowButton>
       <Notification class="ml-auto size-8 mr-2 cursor-pointer"></Notification>
-      <img src="./assets/img/setting.svg" alt="进入设置" class="w-8 cursor-pointer">
+      <img src="./assets/img/setting.svg" title="进入设置" class="w-8 cursor-pointer btn-animation">
     </section>
     
   </div>
