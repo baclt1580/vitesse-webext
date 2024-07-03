@@ -6,10 +6,11 @@ import langs from 'langs-es';
 import { translatorSettings, type TranslatorSetting } from "../conifg/translators.config";
 import { onScrollDown, splitContentsByLength } from "../render/translator.util";
 import { translate } from "../api/translate.api";
+import { useWebExtensionStorage } from "~/composables/useWebExtensionStorage";
 
 type showMode = 'replace' | 'bottom' | 'origin';
 type rangeMode = "all" | "visible" | "manual";
-type translateStatus = "translating" | "success" |'notNeed'| "error"
+type translateStatus = "translating" | "success" | 'notNeed' | "error"
 export type TranslateSetting = {
     /**翻译结果放到哪 */
     showMode: showMode,
@@ -33,13 +34,23 @@ export type TranlateItem = {
 }
 
 //设置
-export const setting: Ref<TranslateSetting> = ref({
+export const setting: Ref<TranslateSetting> = useWebExtensionStorage<TranslateSetting>("translateSetting", {
     showMode: "bottom",
     rangeMode: "visible",
     translator: translatorSettings[0],
     from: undefined,
     to: langs.where(1, "zh")
-})
+});
+
+export function getDefaultSetting():TranslateSetting{
+    return  {
+        showMode: "bottom",
+        rangeMode: "visible",
+        translator: translatorSettings[0],
+        from: undefined,
+        to: langs.where(1, "zh")
+    }
+}
 
 export const translateItems: Ref<TranlateItem[]> = ref([])
 
@@ -47,12 +58,9 @@ export const translatingItems = computed(() => {
     return translateItems.value.filter(item => item.status == "translating")
 })
 
-//正在翻译
-let translating = ref(false);
-
 export function init() {
     onScrollDown(() => {
-        if (!translating.value || setting.value.rangeMode != "visible") return;
+
 
     })
 }
@@ -88,7 +96,7 @@ function render(textNode: TextNode) {
     let translatedText = textNode.content;
     let translateItem = translateItems.value.find(item => item.hash == textNode.hash);
     if (!translateItem) return;
-    if(textNode.content==translateItem.wrapper.innerHTML){
+    if (textNode.content == translateItem.wrapper.innerHTML) {
         translateItem.status == "notNeed";
         return;
     }
@@ -97,9 +105,9 @@ function render(textNode: TextNode) {
     translatedWrapper.style.left = "0";
     translatedWrapper.innerHTML = translatedText;
     if (translateItem.showMode == "bottom") {
-        let h=parseInt(getComputedStyle(translateItem.wrapper).getPropertyValue("height"));
-        translatedWrapper.style.top = h+10+"px";
-        translateItem.wrapper.style.marginBottom=h+20+"px";
+        let h = parseInt(getComputedStyle(translateItem.wrapper).getPropertyValue("height"));
+        translatedWrapper.style.top = h + 10 + "px";
+        translateItem.wrapper.style.marginBottom = h + 20 + "px";
     } else {
         translatedWrapper.style.top = "0";
     }
@@ -113,5 +121,12 @@ function render(textNode: TextNode) {
     translateItem.status == "success";
 }
 
+export function useTranslate() {
+    return {
+        init,
+        setting,
+        tranlateVisible
+    }
+}
 
 
