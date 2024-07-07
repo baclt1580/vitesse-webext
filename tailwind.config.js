@@ -1,4 +1,4 @@
-/** @type {import('tailwindcss').Config} */
+
 const defaultTheme = require('tailwindcss/defaultTheme');
 function rem2px(input, fontSize = 16) {
   if (input == null) {
@@ -28,6 +28,7 @@ function rem2px(input, fontSize = 16) {
       return input;
   }
 }
+/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./src/**/*.{vue,ts}"
@@ -36,7 +37,7 @@ module.exports = {
     ...rem2px(defaultTheme),
     extend: {
       colors: {
-        "primary":"#fbca1f",
+        "primary": "#fbca1f",
         "n-primaryColor": "#18a058",
         "n-primaryColorHover": "#36ad6a",
         "n-primaryColorPressed": "#0c7a43",
@@ -59,6 +60,9 @@ module.exports = {
         "n-errorColorSuppl": "#de576d",
       }
     },
+    fontFamily: {
+      "kt": "kt"
+    }
   },
   plugins: [require('tailwindcss-convert-px-to-rem')],
   corePlugins: {

@@ -1,9 +1,19 @@
 <script lang='ts' setup>
 import langs from 'langs-es';
-import { useWebExtensionStorage } from '~/composables/useWebExtensionStorage';
-import { TranslateSetting, getDefaultSetting } from '~/contentScripts/use/tranlate.use';
-import { getZhLang, langList } from '~/popup/common/utils/lang.utils';
+import { translateSetting } from '~/common/storage/translateSetting.use';
+import { langList } from '~/popup/common/utils/lang.utils';
+
 let options: Ref<{ label: string, local: string, value: any }[]> = ref([])
+let fromOptions = computed(() => {
+    return [
+        {
+            label: "自动",
+            local: null,
+            value: "auto"
+        },
+        ...options.value
+    ]
+})
 onBeforeMount(() => {
     options.value = langList.map(({ lang, zh }) => {
         return {
@@ -13,28 +23,28 @@ onBeforeMount(() => {
         }
     })
 });
-const setting: Ref<TranslateSetting> = useWebExtensionStorage<TranslateSetting>("translateSetting", getDefaultSetting());
 let from = computed({
     get() {
-        return setting.value.from?.[1] || null
+        return translateSetting.value.from
     },
     set(v) {
-        setting.value.from = langs.all().find(item => item[1] == v);
+        translateSetting.value.from = v
     }
 })
 let to = computed({
     get() {
-        return setting.value.to?.[1] || null
+        
+        return translateSetting.value.to
     },
     set(v) {
-        setting.value.to = langs.all().find(item => item[1] == v);
+        translateSetting.value.to = v
     }
 })
 </script>
 <template>
     <div class="flex items-center space-x-2">
-        <n-select v-model:value="from" :options="options" />
-        <img src="./assets/img/rtight.png" class="w-10" alt="">
+        <n-select v-model:value="from" :options="fromOptions" />
+        <img src="./assets/img/rtight.png" class="w-8" alt="">
         <n-select v-model:value="to" label-field="local" :options="options" />
     </div>
 </template>

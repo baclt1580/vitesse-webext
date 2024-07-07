@@ -1,10 +1,8 @@
 <script lang='ts' setup>
 
 import { visibles } from '~/contentScripts/state/visible';
-import { tranlateVisible } from '~/contentScripts/use/tranlate.use';
-
-
-
+import { useTranslate } from '~/contentScripts/use/tranlate.use';
+let {tranlateVisible}=useTranslate()
 
 </script>
 <template>

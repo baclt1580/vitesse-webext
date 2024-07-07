@@ -4,4 +4,5 @@ import { GPTTranslator } from "../translator/GPTTranslator";
 
 export function initContainer(){
     container.register("translator",{useValue:new GPTTranslator()})
+  
 }

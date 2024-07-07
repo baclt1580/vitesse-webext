@@ -41,7 +41,6 @@ let langMap = {
 };
 export const langList = Object.keys(langMap).map(key=>{
    let lang= langs.all().find(item=>item[1]==key) as Language;
-   console.log(lang)
     return{
         lang,
         zh:(langMap as any)[key] as string

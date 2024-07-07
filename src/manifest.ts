@@ -59,6 +59,10 @@ export async function getManifest() {
         resources: ['dist/contentScripts/style.css'],
         matches: ['<all_urls>'],
       },
+      {
+        resources:["assets/kt.ttf"],
+        matches: ['<all_urls>']
+      }
     ],
     content_security_policy: {
       extension_pages: isDev

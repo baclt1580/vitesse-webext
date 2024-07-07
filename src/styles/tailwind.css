@@ -26,6 +26,10 @@
         background-size  : contain;
         background-repeat: no-repeat;
     }
+    @font-face {
+        font-family: kt;
+        src: url(/assets/kt.ttf);
+    }
 
 }
 

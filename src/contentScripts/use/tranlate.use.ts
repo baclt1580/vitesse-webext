@@ -1,70 +1,28 @@
-import { onMessage, sendMessage } from "webext-bridge/content-script";
 import { TextNode } from "~/background/translator/Translate.abstract";
-import { createElementFromHTML, generateWrappers } from "../render/wrapper.util";
+import { generateWrappers } from "../render/wrapper.util";
 import { Md5 } from "ts-md5";
-import langs from 'langs-es';
-import { translatorSettings, type TranslatorSetting } from "../conifg/translators.config";
-import { onScrollDown, splitContentsByLength } from "../render/translator.util";
+import { splitContentsByLength } from "../render/translator.util";
 import { translate } from "../api/translate.api";
-import { useWebExtensionStorage } from "~/composables/useWebExtensionStorage";
+import { showMode, translateSetting } from "~/common/storage/translateSetting.use";
 
-type showMode = 'replace' | 'bottom' | 'origin';
-type rangeMode = "all" | "visible" | "manual";
+
 type translateStatus = "translating" | "success" | 'notNeed' | "error"
-export type TranslateSetting = {
-    /**翻译结果放到哪 */
-    showMode: showMode,
-    /**翻译哪些内容 */
-    rangeMode: rangeMode,
-    /**用什么翻译 */
-    translator: TranslatorSetting,
-    from?: Language,
-    to?: Language
-}
-
 export type TranlateItem = {
+    //原文hash
     hash: string,
     wrapper: HTMLElement,
     translated: HTMLElement | null,
     showMode?: showMode,
-    /**用什么翻译的 */
-    translator: TranslatorSetting,
-    /**状态,翻译中,成功,失败 */
+    translator: string,
     status: translateStatus
 }
 
-//设置
-export const setting: Ref<TranslateSetting> = useWebExtensionStorage<TranslateSetting>("translateSetting", {
-    showMode: "bottom",
-    rangeMode: "visible",
-    translator: translatorSettings[0],
-    from: undefined,
-    to: langs.where(1, "zh")
-});
-
-export function getDefaultSetting():TranslateSetting{
-    return  {
-        showMode: "bottom",
-        rangeMode: "visible",
-        translator: translatorSettings[0],
-        from: undefined,
-        to: langs.where(1, "zh")
-    }
-}
-
-export const translateItems: Ref<TranlateItem[]> = ref([])
-
-export const translatingItems = computed(() => {
-    return translateItems.value.filter(item => item.status == "translating")
-})
-
-export function init() {
-    onScrollDown(() => {
+//所有翻译节点,节点信息包括当前文本块的一些信息,原文,译文,显示位置,hash等
+const translateItems: Ref<TranlateItem[]> = ref([])
 
 
-    })
-}
-export function tranlateVisible() {
+//生成翻译节点->翻译->调用render渲染
+function tranlateVisible() {
     let wrappers = generateWrappers();
     let textNodes = wrappers.map(el => ({
         hash: Md5.hashStr(el.innerHTML),
@@ -73,9 +31,9 @@ export function tranlateVisible() {
     let items: TranlateItem[] = wrappers.map(wrapper => {
         return {
             hash: Md5.hashStr(wrapper.innerHTML),
-            showMode: setting.value.showMode,
+            showMode: translateSetting.value.showMode,
             wrapper,
-            translator: setting.value.translator,
+            translator: translateSetting.value.translator,
             translated: null,
             status: "translating"
         }
@@ -85,7 +43,7 @@ export function tranlateVisible() {
         let currentItems = textNodes.map(node => items.find(item => item.hash == node.hash)).filter(item => !!item) as TranlateItem[];
         translateItems.value.push(...currentItems)
         let textNodesRes = await translate({
-            name: setting.value.translator.name,
+            name: translateSetting.value.translator,
             textNodes
         });
         textNodesRes.forEach(render);
@@ -123,8 +81,6 @@ function render(textNode: TextNode) {
 
 export function useTranslate() {
     return {
-        init,
-        setting,
         tranlateVisible
     }
 }
