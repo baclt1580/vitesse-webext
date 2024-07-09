@@ -49,6 +49,21 @@ const storageInterface: StorageLikeAsync = {
     return storedData[key]
   },
 }
+const sessionStorageInterface: StorageLikeAsync = {
+  removeItem(key: string) {
+    return storage.session.remove(key)
+  },
+
+  setItem(key: string, value: string) {
+    return storage.session.set({ [key]: value })
+  },
+
+  async getItem(key: string) {
+    const storedData = await storage.session.get(key)
+
+    return storedData[key]
+  },
+}
 
 /**
  * https://github.com/vueuse/vueuse/blob/658444bf9f8b96118dbd06eba411bb6639e24e88/packages/core/useStorageAsync/index.ts
@@ -60,7 +75,7 @@ const storageInterface: StorageLikeAsync = {
 export function useWebExtensionStorage<T>(
   key: string,
   initialValue: MaybeRefOrGetter<T>,
-  options: WebExtensionStorageOptions<T> = {},
+  options: WebExtensionStorageOptions<T>&{session?:boolean} = {},
 ): RemovableRef<T> {
   const {
     flush = 'pre',
@@ -70,6 +85,7 @@ export function useWebExtensionStorage<T>(
     mergeDefaults = false,
     shallow,
     eventFilter,
+    session,
     onError = (e) => {
       console.error(e)
     },
@@ -80,17 +96,17 @@ export function useWebExtensionStorage<T>(
 
   const data = (shallow ? shallowRef : ref)(initialValue) as Ref<T>
   const serializer = options.serializer ?? StorageSerializers[type]
-
+  let storageIns=session?sessionStorageInterface:storageInterface
   async function read(event?: { key: string, newValue: string | null }) {
     if (event && event.key !== key)
       return
 
     try {
-      const rawValue = event ? event.newValue : await storageInterface.getItem(key)
+      const rawValue = event ? event.newValue : await storageIns.getItem(key)
       if (rawValue == null) {
         data.value = rawInit
         if (writeDefaults && rawInit !== null)
-          await storageInterface.setItem(key, await serializer.write(rawInit))
+          await storageIns.setItem(key, await serializer.write(rawInit))
       }
       else if (mergeDefaults) {
         const value = await serializer.read(rawValue) as T
@@ -115,8 +131,8 @@ export function useWebExtensionStorage<T>(
     try {
       await (
         data.value == null
-          ? storageInterface.removeItem(key)
-          : storageInterface.setItem(key, await serializer.write(data.value))
+          ? storageIns.removeItem(key)
+          : storageIns.setItem(key, await serializer.write(data.value))
       )
     }
     catch (error) {

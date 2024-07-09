@@ -1,6 +1,7 @@
 import type { ProtocolWithReturn } from 'webext-bridge'
 import { translatePayload } from '~/background/controller/tranlate.controller'
 import { TextNode } from '~/background/translator/Translate.abstract'
+import { TranslateSetting } from '~/contentScripts/state/setting.state'
 import { Status } from '~/contentScripts/state/status.state'
 declare module 'webext-bridge' {
   export interface ProtocolMap {
@@ -10,5 +11,6 @@ declare module 'webext-bridge' {
     'get-current-tab': ProtocolWithReturn<{ tabId: number }, { title?: string }>
     "translate": ProtocolWithReturn<translatePayload, TextNode[]>
     "getStatus_c": ProtocolWithReturn<null, Status>
+    "getSetting_c":ProtocolWithReturn<null,TranslateSetting>
   }
 }

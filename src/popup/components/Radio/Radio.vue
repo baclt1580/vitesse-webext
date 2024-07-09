@@ -70,17 +70,17 @@ export default {
 
 .radio-button__input:checked+.radio-button__label .radio-button__custom {
   transform: translateY(-50%) scale(0.9);
-  border: 5px solid #4c8bf5;
-  color: #4c8bf5;
+  border: 5px solid #52bfa1;
+  color: #52bfa1;
 }
 
 .radio-button__input:checked+.radio-button__label {
-  color: #4c8bf5;
+  color: #000000;
 }
 
 .radio-button__label:hover .radio-button__custom {
   transform: translateY(-50%) scale(1.2);
-  border-color: #4c8bf5;
-  box-shadow: 0 0 10px #4c8bf580;
+  border-color: #52bfa1;
+  box-shadow: 0 0 10px #52bfa180;
 }
 </style>

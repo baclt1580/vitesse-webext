@@ -15,6 +15,7 @@ let fromOptions = computed(() => {
     ]
 })
 onBeforeMount(() => {
+
     options.value = langList.map(({ lang, zh }) => {
         return {
             label: zh || lang.name,

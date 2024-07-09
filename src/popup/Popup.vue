@@ -1,18 +1,18 @@
 <script setup lang="ts">
 import { onMessage, sendMessage } from 'webext-bridge/popup';
 import YellowButton from './components/button/YellowButton/YellowButton.vue';
-import Notification from './components/Notification/Notification.vue';
-import Status from './components/Status/Status.vue';
-import TranslateView from "./components/TranslateView/TranslateView.vue"
+import Notification from './components/business/Notification/Notification.vue';
+import Status from './components/business/Status/Status.vue';
+import TranslateView from "./components/business/TranslateView/TranslateView.vue"
+import OriginToggle from './components/business/OriginToggle/OriginToggle.vue';
 async function toLogin() {
   let tabs = await browser.tabs.query({ active: true, currentWindow: true })
   const activeTab = tabs[0];
-  console.log("activeTab",activeTab)
   sendMessage("toLogin", "", `content-script@${activeTab.id}`)
 }
 </script>
 <template>
-  <div class="w-[300px] h-[500px] bg-white p-2 pb-8 relative">
+  <div class="w-[300px] bg-white p-2 pb-16 relative">
     <!-- 头部 -->
     <section class="flex justify-between">
       <YellowButton @click="toLogin">
@@ -25,6 +25,7 @@ async function toLogin() {
     <section class="mt-4">
       <TranslateView></TranslateView>
     </section>
+   
     <Status class="absolute bottom-2 right-2"></Status>
   </div>
 </template>

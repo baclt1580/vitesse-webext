@@ -6,7 +6,7 @@ import { translate } from "../api/translate.api";
 import { showMode, translateSetting } from "~/common/storage/translateSetting.use";
 
 
-type translateStatus = "translating" | "success" | 'notNeed' | "error"
+type translateStatus = "translating" | "success" | "error"
 export type TranlateItem = {
     //原文hash
     hash: string,
@@ -14,7 +14,11 @@ export type TranlateItem = {
     translated: HTMLElement | null,
     showMode?: showMode,
     translator: string,
-    status: translateStatus
+    //无需翻译
+    notNeed:boolean,
+    status: translateStatus,
+    //是否只显示原文
+    onlyOrigin:boolean
 }
 
 //所有翻译节点,节点信息包括当前文本块的一些信息,原文,译文,显示位置,hash等
@@ -35,7 +39,9 @@ function tranlateVisible() {
             wrapper,
             translator: translateSetting.value.translator,
             translated: null,
-            status: "translating"
+            status: "translating",
+            notNeed:false,
+            onlyOrigin:false
         }
     })
     let textNodeChunks = splitContentsByLength(textNodes);
@@ -54,8 +60,9 @@ function render(textNode: TextNode) {
     let translatedText = textNode.content;
     let translateItem = translateItems.value.find(item => item.hash == textNode.hash);
     if (!translateItem) return;
+    //翻译和原文一样则标为无需翻译
     if (textNode.content == translateItem.wrapper.innerHTML) {
-        translateItem.status == "notNeed";
+        translateItem.notNeed == true;
         return;
     }
     let translatedWrapper = document.createElement("div")
@@ -69,11 +76,7 @@ function render(textNode: TextNode) {
     } else {
         translatedWrapper.style.top = "0";
     }
-    if (translateItem.showMode == "origin") {
-        translatedWrapper.style.zIndex = "-9999";
-    } else {
-        translatedWrapper.style.zIndex = "1";
-    }
+    translatedWrapper.style.zIndex = "1";
     translateItem.translated = translatedWrapper;
     translateItem.wrapper.appendChild(translatedWrapper);
     translateItem.status == "success";

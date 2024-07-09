@@ -1,8 +1,9 @@
 <script lang='ts' setup>
 import { sendMessage } from 'webext-bridge/popup';
+import { useActiveTab } from '~/common/use/useActiveTab.use';
+import { getActiveTab } from '~/common/utils/utils';
 import { Status } from '~/contentScripts/state/status.state';
-import { useActiveTab } from '~/popup/common/use/useActiveTab.use';
-import { getActiveTab } from '~/popup/common/utils/utils';
+
 let status = ref<Status | null>();
 let statusText = computed(() => {
 

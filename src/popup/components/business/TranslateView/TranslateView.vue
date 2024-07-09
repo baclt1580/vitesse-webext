@@ -2,6 +2,7 @@
 import TranslateDirection from './components/TranslateDirection/TranslateDirection.vue';
 import TranslateRange from './components/TranslateRange/TranslateRange.vue';
 import TranslatePosition from './components/TranslatePosition/TranslatePosition.vue';
+import TranslateBtns from "./components/TranslateBtns/TranslateBtns.vue"
 </script>
 <template>
     <div>
@@ -11,6 +12,8 @@ import TranslatePosition from './components/TranslatePosition/TranslatePosition.
         <TranslateRange class="mt-6"></TranslateRange>
         <!-- 译文位置 -->
         <TranslatePosition class="mt-4"></TranslatePosition>
+        <TranslateBtns class="mt-8"></TranslateBtns>
+        <div class="absolute bottom-2 left-2 text-nowrap cursor-pointer">仅显示原文</div>
     </div>
 </template>
 
