@@ -75,7 +75,7 @@ const sessionStorageInterface: StorageLikeAsync = {
 export function useWebExtensionStorage<T>(
   key: string,
   initialValue: MaybeRefOrGetter<T>,
-  options: WebExtensionStorageOptions<T>&{session?:boolean} = {},
+  options: WebExtensionStorageOptions<T> & { session?: boolean } = {},
 ): RemovableRef<T> {
   const {
     flush = 'pre',
@@ -96,7 +96,7 @@ export function useWebExtensionStorage<T>(
 
   const data = (shallow ? shallowRef : ref)(initialValue) as Ref<T>
   const serializer = options.serializer ?? StorageSerializers[type]
-  let storageIns=session?sessionStorageInterface:storageInterface
+  let storageIns = session ? sessionStorageInterface : storageInterface
   async function read(event?: { key: string, newValue: string | null }) {
     if (event && event.key !== key)
       return
@@ -175,3 +175,4 @@ export function useWebExtensionStorage<T>(
 
   return data as RemovableRef<T>
 }
+

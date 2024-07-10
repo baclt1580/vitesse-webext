@@ -3,8 +3,15 @@
 let dealedEls: HTMLElement[] = [];
 
 /**可见范围元素生成wrapper并返回 */
-export function generateWrappers(generateWrapper?: () => HTMLElement) {
-    let elements = getVisibleElements();
+export function generateVisibleWrappers() {
+    let elements = getElements(true);
+    return generateWrappersByElements(elements)
+}
+export function generateAllWrappers() {
+    let elements=getElements(false);
+    return generateWrappersByElements(elements)
+}
+function generateWrappersByElements(elements: HTMLElement[]) {
     let wrappers = elements.map(el => {
         if (dealedEls.includes(el)) return;
         let contactableWithText = Array.from(el.childNodes).find(node => {
@@ -19,7 +26,7 @@ export function generateWrappers(generateWrapper?: () => HTMLElement) {
             nextNode = nextNode.nextSibling
         }
         //包裹
-        let wrapper = generateWrapper?generateWrapper():document.createElement('div');
+        let wrapper = document.createElement('div');
         wrapper.dataset.isWrapper = "isWrapper"
         wrapper.style.display = "inline-block";
         wrapper.style.position = "relative";
@@ -37,7 +44,6 @@ export function generateWrappers(generateWrapper?: () => HTMLElement) {
     }).filter(item => !!item) as HTMLElement[];
     return wrappers;
 }
-
 function isConnectableNode(node: Node) {
     if (node.nodeType != Node.TEXT_NODE && node.nodeType != Node.ELEMENT_NODE) return false;
     if (node.nodeType == Node.TEXT_NODE) return true;
@@ -52,7 +58,7 @@ function isConnectableNode(node: Node) {
 
 // 获取所有可见元素的主函数
 //有可翻译字
-export function getVisibleElements(): HTMLElement[] {
+export function getElements(validatevisible: boolean): HTMLElement[] {
     // 创建 TreeWalker 实例以遍历文档中的所有元素节点
     const treeWalker = document.createTreeWalker(
         document.body,
@@ -64,7 +70,10 @@ export function getVisibleElements(): HTMLElement[] {
                 if (node.tagName.toLowerCase().includes("style")) return NodeFilter.FILTER_REJECT;
                 if (node.tagName.toLowerCase().includes("link")) return NodeFilter.FILTER_REJECT;
                 if (node.dataset.isWrapper == "isWrapper") return NodeFilter.FILTER_REJECT;
-                let isVisible = isElementInViewport(node as HTMLElement);
+                let isVisible = true;
+                if (validatevisible) {
+                    isVisible = isElementInViewport(node as HTMLElement);
+                }
                 let index = Array.from(node.childNodes).findIndex(node => {
                     return node.nodeType == Node.TEXT_NODE && node.nodeValue && isNeedTranslatable(node.nodeValue)
                 })
@@ -99,7 +108,7 @@ function isElementInViewport(el: HTMLElement): boolean {
 }
 
 
-export function createElementFromHTML(htmlString:string) {
+export function createElementFromHTML(htmlString: string) {
     var template = document.createElement('template');
     template.innerHTML = htmlString.trim();
     // 使用 .content.firstChild 获取生成的元素

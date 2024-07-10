@@ -1,5 +1,5 @@
 import { TextNode } from "~/background/translator/Translate.abstract";
-import { generateWrappers } from "../render/wrapper.util";
+import { generateVisibleWrappers, generateAllWrappers } from "../render/wrapper.util";
 import { Md5 } from "ts-md5";
 import { splitContentsByLength } from "../render/translator.util";
 import { translate } from "../api/translate.api";
@@ -15,10 +15,10 @@ export type TranlateItem = {
     showMode?: showMode,
     translator: string,
     //无需翻译
-    notNeed:boolean,
+    notNeed: boolean,
     status: translateStatus,
     //是否只显示原文
-    onlyOrigin:boolean
+    onlyOrigin: boolean
 }
 
 //所有翻译节点,节点信息包括当前文本块的一些信息,原文,译文,显示位置,hash等
@@ -26,8 +26,17 @@ const translateItems: Ref<TranlateItem[]> = ref([])
 
 
 //生成翻译节点->翻译->调用render渲染
-function tranlateVisible() {
-    let wrappers = generateWrappers();
+function translateVisible() {
+    let wrappers = generateVisibleWrappers();
+    tranlsateByWrapper(wrappers)
+}
+//翻译全部
+function translateAll() {
+    let wrappers=generateAllWrappers()
+    tranlsateByWrapper(wrappers)
+}
+
+function tranlsateByWrapper(wrappers:HTMLElement[]) {
     let textNodes = wrappers.map(el => ({
         hash: Md5.hashStr(el.innerHTML),
         content: el.innerHTML
@@ -40,12 +49,12 @@ function tranlateVisible() {
             translator: translateSetting.value.translator,
             translated: null,
             status: "translating",
-            notNeed:false,
-            onlyOrigin:false
+            notNeed: false,
+            onlyOrigin: false
         }
     })
     let textNodeChunks = splitContentsByLength(textNodes);
-    textNodeChunks.forEach(async textNodes => {
+    let pros= textNodeChunks.map(async textNodes => {
         let currentItems = textNodes.map(node => items.find(item => item.hash == node.hash)).filter(item => !!item) as TranlateItem[];
         translateItems.value.push(...currentItems)
         let textNodesRes = await translate({
@@ -54,8 +63,8 @@ function tranlateVisible() {
         });
         textNodesRes.forEach(render);
     })
+    return Promise.all(pros)
 }
-
 function render(textNode: TextNode) {
     let translatedText = textNode.content;
     let translateItem = translateItems.value.find(item => item.hash == textNode.hash);
@@ -84,7 +93,8 @@ function render(textNode: TextNode) {
 
 export function useTranslate() {
     return {
-        tranlateVisible
+        translateVisible,
+        translateAll
     }
 }
 

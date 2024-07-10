@@ -2,7 +2,7 @@
 
 import { visibles } from '~/contentScripts/state/visible';
 import { useTranslate } from '~/contentScripts/use/tranlate.use';
-let {tranlateVisible}=useTranslate()
+let {translateVisible}=useTranslate()
 
 </script>
 <template>
@@ -38,7 +38,7 @@ let {tranlateVisible}=useTranslate()
                         <div data-projection-id="2">
                             <button
                                 class="m-0.5 flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 rounded-full border border-blue-gray-50 bg-white p-1 font-normal transition-transform duration-300 ease-in-out hover:scale-110 focus:scale-110 active:scale-100"
-                                @click="tranlateVisible">
+                                @click="translateVisible">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" aria-hidden="true" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round"

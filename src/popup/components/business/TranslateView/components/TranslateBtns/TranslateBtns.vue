@@ -3,7 +3,7 @@ import YellowButton from "~/popup/components/button/YellowButton/YellowButton.vu
 </script>
 <template>
     <div class="flex justify-center">
-        <YellowButton class="px-8 py-2 ">
+        <YellowButton class="px-8 py-2 " @click="">
             <span class="text-base">翻译</span>
         </YellowButton>
     </div>

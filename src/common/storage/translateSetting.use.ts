@@ -1,8 +1,4 @@
-import langs from "langs-es";
-import { useWebExtensionStorage } from "~/composables/useWebExtensionStorage";
-import { getCurrentEnvironment } from "../utils/utils";
-import { useActiveTab } from "../use/useActiveTab.use";
-import { clone } from "lodash-es";
+import { useWebExtensionStoragePage } from "~/composables/usePageWebExtensionStorage";
 
 //翻译设置
 export type showMode = 'replace' | 'bottom';
@@ -20,10 +16,6 @@ export type TranslateSetting = {
     //1版code
     to: string
 }
-let activeTab = useActiveTab()
-export const translateSettingMap = useWebExtensionStorage<Map<string, TranslateSetting>>("translateSetting", () => {
-    return new Map();
-}, { session: true });
 let defaultSetting = (): TranslateSetting => {
     return {
         showMode: "bottom",
@@ -33,12 +25,5 @@ let defaultSetting = (): TranslateSetting => {
         to: navigator.language.split('-')[0]
     }
 };
-export const translateSetting = computed<TranslateSetting>(() => {
-    if (!activeTab.value?.id) return defaultSetting();
-    if (!translateSettingMap.value.has(activeTab.value?.id + "")) {
-        let setting=defaultSetting();
-        translateSettingMap.value.set(activeTab.value?.id + "",setting)
-        return setting
-    }
-    return translateSettingMap.value.get(activeTab.value?.id + "") as TranslateSetting;
-})
+export const translateSetting=useWebExtensionStoragePage<TranslateSetting>("translateSetting",defaultSetting);
+
