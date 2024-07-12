@@ -10,7 +10,6 @@ declare module 'webext-bridge' {
     'tab-prev': { title: string | undefined }
     'get-current-tab': ProtocolWithReturn<{ tabId: number }, { title?: string }>
     "translate": ProtocolWithReturn<translatePayload, TextNode[]>
-    "getStatus_c": ProtocolWithReturn<null, Status>
     "getSetting_c":ProtocolWithReturn<null,TranslateSetting>
   }
 }

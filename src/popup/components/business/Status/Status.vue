@@ -2,25 +2,11 @@
 import { sendMessage } from 'webext-bridge/popup';
 import { useActiveTab } from '~/common/use/useActiveTab.use';
 import { getActiveTab } from '~/common/utils/utils';
-import { Status } from '~/contentScripts/state/status.state';
-
-let status = ref<Status | null>();
-let statusText = computed(() => {
-
-    switch (status.value) {
-        case "success":
-            return "已注入";
-        case "loading":
-            return "注入中";
-        case "error":
-            return "注入失败";
-    }
-})
-let activeTab = useActiveTab()
+import { translateStatus } from '~/common/storage/translateStatus.use';
+let {activeTab} = useActiveTab()
 async function load() {
     let tab = await getActiveTab();
-    let res = await sendMessage("getStatus_c", null, `content-script@${tab.id}`)
-    status.value = res;
+  
 }
 
 onBeforeMount(() => {

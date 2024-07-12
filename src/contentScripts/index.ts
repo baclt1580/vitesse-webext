@@ -6,10 +6,10 @@ import "~/styles/tailwind.css"
 import 'vfonts/Lato.css'
 import "normalize.css";
 import { controller } from './controller/controller'
-import { status } from './state/status.state'
+import { translateStatus } from '~/common/storage/translateStatus.use';
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 (() => {
-  status.value="loading"
+  translateStatus.value = "injecting"
   const container = document.createElement('div')
   container.id = __NAME__
   const root = document.createElement('div')

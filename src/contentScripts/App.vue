@@ -2,9 +2,9 @@
 import Menu from "./components/Menu/Menu.vue"
 import Login from "./components/Login/Login.vue";
 import Register from "./components/Register/Register.vue";
-import { status } from "./state/status.state";
+import { translateStatus } from "~/common/storage/translateStatus.use";
 onMounted(()=>{
-   status.value="success"
+   translateStatus.value="free"
 })
 </script>
 <template>

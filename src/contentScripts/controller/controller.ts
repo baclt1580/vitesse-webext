@@ -1,8 +1,8 @@
 import { onMessage } from "webext-bridge/content-script"
 import { visibles } from "../state/visible"
-import { status } from "../state/status.state"
-
+import { translateController } from "./translate.controller"
 export function controller() {
+    translateController()
     console.log("initController")
     onMessage("toLogin", () => {
         console.log("收到消息tologin")
@@ -13,8 +13,6 @@ export function controller() {
         console.log("收到消息toRegister")
         visibles.value.register = true
     })
-    onMessage("getStatus_c",()=>{
-        return status.value
-    })
+   
     
 }
