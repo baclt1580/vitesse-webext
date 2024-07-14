@@ -2,7 +2,7 @@ type Environment = 'background' | 'popup' | 'content_script' | 'unknown';
 
 export function getCurrentEnvironment(): Environment {
     // Check if running in a background script
-    if (chrome.extension.getBackgroundPage && chrome.extension.getBackgroundPage() === window) {
+    if (!!browser.runtime.id) {
         return 'background';
     }
 

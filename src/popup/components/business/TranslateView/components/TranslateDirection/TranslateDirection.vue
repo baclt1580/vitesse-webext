@@ -1,5 +1,4 @@
 <script lang='ts' setup>
-import langs from 'langs-es';
 import { translateSetting } from '~/common/storage/translateSetting.use';
 import { langList } from '~/popup/common/utils/lang.utils';
 
@@ -14,8 +13,8 @@ let fromOptions = computed(() => {
         ...options.value
     ]
 })
-onBeforeMount(() => {
 
+onBeforeMount(() => {
     options.value = langList.map(({ lang, zh }) => {
         return {
             label: zh || lang.name,

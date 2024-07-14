@@ -4,7 +4,6 @@ import YellowButton from './components/button/YellowButton/YellowButton.vue';
 import Notification from './components/business/Notification/Notification.vue';
 import Status from './components/business/Status/Status.vue';
 import TranslateView from "./components/business/TranslateView/TranslateView.vue"
-import OriginToggle from './components/business/OriginToggle/OriginToggle.vue';
 async function toLogin() {
   let tabs = await browser.tabs.query({ active: true, currentWindow: true })
   const activeTab = tabs[0];

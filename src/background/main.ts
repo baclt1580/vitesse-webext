@@ -4,6 +4,9 @@ import { translateController } from "./controller/tranlate.controller";
 import { onMessage, sendMessage } from "webext-bridge/background";
 import { Tabs } from "webextension-polyfill";
 import { isFirefox } from "~/env";
+import { controller } from "./controller/controller";
+import { useActiveTabId } from "~/common/use/useActiveTabId.use";
+
 
 // only on dev mode
 if (import.meta.hot) {
@@ -21,9 +24,13 @@ if (import.meta.hot) {
 //     }
 //   }
 // })
+
 browser.runtime.onInstalled.addListener(async () => {
   initContainer()
+  let {init:initActiveTabId}=useActiveTabId()
+  initActiveTabId()
   translateController()
+  controller()
 })
 
 

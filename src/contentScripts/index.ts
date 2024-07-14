@@ -7,9 +7,13 @@ import 'vfonts/Lato.css'
 import "normalize.css";
 import { controller } from './controller/controller'
 import { translateStatus } from '~/common/storage/translateStatus.use';
+import { useActiveTabId } from '~/common/use/useActiveTabId.use'
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
-(() => {
+let {tabOK}=useActiveTabId();
+(async () => {
+  await tabOK();
   translateStatus.value = "injecting"
+  console.log("translateStatus.value", translateStatus.value)
   const container = document.createElement('div')
   container.id = __NAME__
   const root = document.createElement('div')
@@ -25,3 +29,4 @@ import { translateStatus } from '~/common/storage/translateStatus.use';
   app.mount(root)
   controller()
 })()
+
