@@ -1,9 +1,6 @@
 import "reflect-metadata";
 import { initContainer } from "./ioc/container";
 import { translateController } from "./controller/tranlate.controller";
-import { onMessage, sendMessage } from "webext-bridge/background";
-import { Tabs } from "webextension-polyfill";
-import { isFirefox } from "~/env";
 import { controller } from "./controller/controller";
 import { useActiveTabId } from "~/common/use/useActiveTabId.use";
 
@@ -24,15 +21,17 @@ if (import.meta.hot) {
 //     }
 //   }
 // })
-
-browser.runtime.onInstalled.addListener(async () => {
+//初始化
+; (async () => {
   await clearPageStorage()
   initContainer()
   let { init: initActiveTabId } = useActiveTabId()
   initActiveTabId()
-
   translateController()
   controller()
+})()
+browser.runtime.onInstalled.addListener(async () => {
+  console.log("安装了")
 })
 //清理所有的页面级缓存
 async function clearPageStorage() {

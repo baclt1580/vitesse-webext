@@ -2,7 +2,8 @@ import { chunk } from "lodash-es"
 
 export type TextNode = {
     hash: string,
-    content: string
+    content: string,
+    isError?:boolean
 }
 //翻译上下文
 export type TranslateContext={

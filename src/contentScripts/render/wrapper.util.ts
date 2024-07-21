@@ -1,17 +1,18 @@
+import { isBoolean } from "lodash-es";
 
 
 let dealedEls: HTMLElement[] = [];
 
 /**可见范围元素生成wrapper并返回 */
-export function generateVisibleWrappers() {
+export function generateVisibleWrappers(isBottom: boolean = false) {
     let elements = getElements(true);
-    return generateWrappersByElements(elements)
+    return generateWrappersByElements(elements, isBottom)
 }
 export function generateAllWrappers() {
-    let elements=getElements(false);
+    let elements = getElements(false);
     return generateWrappersByElements(elements)
 }
-function generateWrappersByElements(elements: HTMLElement[]) {
+function generateWrappersByElements(elements: HTMLElement[], isBottom: boolean = false) {
     let wrappers = elements.map(el => {
         if (dealedEls.includes(el)) return;
         let contactableWithText = Array.from(el.childNodes).find(node => {
@@ -31,10 +32,10 @@ function generateWrappersByElements(elements: HTMLElement[]) {
         wrapper.style.display = "inline-block";
         wrapper.style.position = "relative";
         el.replaceChild(wrapper, contactableWithText);
-        wrapper.style.marginBottom = getComputedStyle(wrapper).getPropertyValue("height");
         contactables.forEach(node => {
             wrapper.appendChild(node)
         })
+
         //标记
         let walker = document.createTreeWalker(wrapper, NodeFilter.SHOW_ELEMENT)
         while (walker.nextNode()) {
@@ -44,6 +45,8 @@ function generateWrappersByElements(elements: HTMLElement[]) {
     }).filter(item => !!item) as HTMLElement[];
     return wrappers;
 }
+
+//是否为可连接node
 function isConnectableNode(node: Node) {
     if (node.nodeType != Node.TEXT_NODE && node.nodeType != Node.ELEMENT_NODE) return false;
     if (node.nodeType == Node.TEXT_NODE) return true;
@@ -69,13 +72,14 @@ export function getElements(validatevisible: boolean): HTMLElement[] {
                 if (node.tagName.toLowerCase().includes("script")) return NodeFilter.FILTER_REJECT;
                 if (node.tagName.toLowerCase().includes("style")) return NodeFilter.FILTER_REJECT;
                 if (node.tagName.toLowerCase().includes("link")) return NodeFilter.FILTER_REJECT;
+                if (node.classList.contains("notranslate")) return NodeFilter.FILTER_REJECT;
                 if (node.dataset.isWrapper == "isWrapper") return NodeFilter.FILTER_REJECT;
                 let isVisible = true;
                 if (validatevisible) {
                     isVisible = isElementInViewport(node as HTMLElement);
                 }
                 let index = Array.from(node.childNodes).findIndex(node => {
-                    return node.nodeType == Node.TEXT_NODE && node.nodeValue && isNeedTranslatable(node.nodeValue)
+                    return  isConnectableNode(node)&& node.textContent&&isNeedTranslatable(node.textContent)
                 })
                 return isVisible && index > -1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
             }

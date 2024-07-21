@@ -2,14 +2,15 @@
 import {v1} from "uuid"
 defineProps<{
   name: string,
-  value: string
+  value: string,
+  disabled?:boolean
 }>()
 let modelValue = defineModel("modelValue");
 let id=v1();
 </script>
 <template>
   <div class="radio-button">
-    <input :name="name" :id="id" :value="value" v-model="modelValue" class="radio-button__input" type="radio">
+    <input :name="name" :id="id" :value="value" :disabled="disabled" v-model="modelValue" class="radio-button__input" type="radio">
     <label :for="id" class="radio-button__label">
       <span class="radio-button__custom"></span>
       <slot></slot>

@@ -1,7 +1,7 @@
 import { useWebExtensionStoragePage } from "~/composables/usePageWebExtensionStorage";
 
 //翻译设置
-export type showMode = 'replace' | 'bottom';
+export type showMode = 'replace' | 'bottom'|'origin';
 //翻译范围
 type rangeMode = "all" | "visible" | "manual";
 export type TranslateSetting = {

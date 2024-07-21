@@ -1,8 +1,10 @@
+import { debounce } from "lodash-es";
 import { TextNode } from "~/background/translator/Translate.abstract";
 
 //页面向下滚动时执行
 export function onScrollDown(callback: () => void): () => void {
     let lastScrollTop = 0;
+    
     function onScroll(): void {
         const scrollTop = window.scrollY || document.documentElement.scrollTop;
 
@@ -12,36 +14,29 @@ export function onScrollDown(callback: () => void): () => void {
 
         lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
     }
-
-    window.addEventListener('scroll', onScroll);
+    let onScrollDebounce=debounce(onScroll,300)
+    window.addEventListener('scroll', onScrollDebounce);
     return () => {
-        window.removeEventListener('scroll', onScroll);
+        window.removeEventListener('scroll', onScrollDebounce);
     };
 }
 
-export function splitContentsByLength(objects: TextNode[], maxLength: number = 1200): TextNode[][] {
-    const result: TextNode[][] = [];
-    let currentBatch: TextNode[] = [];
-    let currentLength: number = 0;
-  
-    for (const obj of objects) {
-      // 如果当前批次加上当前对象会超过最大长度，则保存当前批次并开始新的批次
-      if (currentLength + obj.content.length > maxLength) {
-        result.push(currentBatch);
-        currentBatch = [];
-        currentLength = 0;
+export function splitContentsByLength(textNodes: TextNode[], maxLength: number = 4000): TextNode[][] {
+    let res:TextNode[][]=[];
+    let temp:TextNode[]=[];
+    let tempLength=0;
+    textNodes.forEach(textNode=>{
+      if(tempLength+textNode.content.length>maxLength){
+        temp.push(textNode);
+        res.push(temp);
+        temp=[];
+        tempLength=0;
+      }else{
+        temp.push(textNode);
+        tempLength+=textNode.content.length
       }
-  
-      // 将当前对象添加到当前批次
-      currentBatch.push(obj);
-      currentLength += obj.content.length;
-    }
-  
-    // 不要忘记在结束时添加最后一个批次
-    if (currentBatch.length > 0) {
-      result.push(currentBatch);
-    }
-  
-    return result;
-  }
+    })
+    res.push(temp);
+    return res;
+}
   

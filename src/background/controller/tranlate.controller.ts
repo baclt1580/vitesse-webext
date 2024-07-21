@@ -11,6 +11,7 @@ export type translatePayload = {
 export function translateController() {
     let translators = container.resolveAll<Translator>("translator");
     onMessage("translate", async (e) => {
+        console.log("翻译")
         if (!e.data.textNodes.length) {
             console.warn("翻译:收到的数据有问题");
             return e.data.textNodes;

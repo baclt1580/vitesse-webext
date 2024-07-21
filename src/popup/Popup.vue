@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onMessage, sendMessage } from 'webext-bridge/popup';
+import { sendMessage } from 'webext-bridge/popup';
 import YellowButton from './components/button/YellowButton/YellowButton.vue';
 import Notification from './components/business/Notification/Notification.vue';
-import Status from './components/business/Status/Status.vue';
 import TranslateView from "./components/business/TranslateView/TranslateView.vue"
 async function toLogin() {
   let tabs = await browser.tabs.query({ active: true, currentWindow: true })
@@ -11,7 +10,7 @@ async function toLogin() {
 }
 </script>
 <template>
-  <div class="w-[300px] bg-white p-2 pb-16 relative">
+  <div class="w-[280px] bg-white p-2 pb-4 relative" id="#app">
     <!-- 头部 -->
     <section class="flex justify-between">
       <YellowButton @click="toLogin">
@@ -24,7 +23,5 @@ async function toLogin() {
     <section class="mt-4">
       <TranslateView></TranslateView>
     </section>
-   
-    <Status class="absolute bottom-2 right-2"></Status>
   </div>
 </template>

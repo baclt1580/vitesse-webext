@@ -12,13 +12,7 @@ import Radio from '~/popup/components/Radio/Radio.vue';
     </section>
     <div class="mt-2 space-x-4">
       <Radio name="radio-group" value="visible" v-model="translateSetting.rangeRange">可见区域</Radio>
-      <Radio name="radio-group" value="manual" v-model="translateSetting.rangeRange">
-        <div class="flex items-center"> 手动 
-            <Tooltip content="点一下翻译一下当前可见区域的内容" class="ml-2">
-              <img src="https://img.icons8.com/dusk/64/ask-question.png" class="w-5">
-            </Tooltip>
-          </div>
-      </Radio>
+     
       <Radio name="radio-group" value="all" v-model="translateSetting.rangeRange">
         整个页面
       </Radio>

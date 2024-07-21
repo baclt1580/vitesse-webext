@@ -8,10 +8,12 @@ import "normalize.css";
 import { controller } from './controller/controller'
 import { translateStatus } from '~/common/storage/translateStatus.use';
 import { useActiveTabId } from '~/common/use/useActiveTabId.use'
+import { sendMessage } from 'webext-bridge/content-script'
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 let {tabOK}=useActiveTabId();
 (async () => {
   await tabOK();
+
   translateStatus.value = "injecting"
   console.log("translateStatus.value", translateStatus.value)
   const container = document.createElement('div')
@@ -30,3 +32,8 @@ let {tabOK}=useActiveTabId();
   controller()
 })()
 
+function heartbeat(){
+  setInterval(()=>{
+    sendMessage("ping",null,"background")
+  },3000)
+}
