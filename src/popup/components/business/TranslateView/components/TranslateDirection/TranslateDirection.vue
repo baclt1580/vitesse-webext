@@ -1,7 +1,7 @@
 <script lang='ts' setup>
 import { translateSetting } from '~/common/storage/translateSetting.use';
 import { langList } from '~/popup/common/utils/lang.utils';
-
+import { currentLang } from '~/popup/state/currentLang.state';
 let options: Ref<{ label: string, local: string, value: any }[]> = ref([])
 let fromOptions = computed(() => {
     return [
@@ -40,9 +40,12 @@ let to = computed({
         translateSetting.value.to = v
     }
 })
+
+
 </script>
 <template>
     <div class="flex items-center space-x-2">
+        {{ currentLang||'无' }}
         <n-select v-model:value="from" :options="fromOptions" />
         <img src="./assets/img/rtight.png" class="w-8" alt="">
         <n-select v-model:value="to" label-field="local" :options="options" />

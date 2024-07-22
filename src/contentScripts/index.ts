@@ -13,9 +13,7 @@ import { sendMessage } from 'webext-bridge/content-script'
 let {tabOK}=useActiveTabId();
 (async () => {
   await tabOK();
-
   translateStatus.value = "injecting"
-  console.log("translateStatus.value", translateStatus.value)
   const container = document.createElement('div')
   container.id = __NAME__
   const root = document.createElement('div')
@@ -32,8 +30,4 @@ let {tabOK}=useActiveTabId();
   controller()
 })()
 
-function heartbeat(){
-  setInterval(()=>{
-    sendMessage("ping",null,"background")
-  },3000)
-}
+

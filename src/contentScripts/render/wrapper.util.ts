@@ -1,5 +1,3 @@
-import { isBoolean } from "lodash-es";
-
 
 let dealedEls: HTMLElement[] = [];
 
@@ -79,7 +77,7 @@ export function getElements(validatevisible: boolean): HTMLElement[] {
                     isVisible = isElementInViewport(node as HTMLElement);
                 }
                 let index = Array.from(node.childNodes).findIndex(node => {
-                    return  isConnectableNode(node)&& node.textContent&&isNeedTranslatable(node.textContent)
+                    return isConnectableNode(node) && node.textContent && isNeedTranslatable(node.textContent)
                 })
                 return isVisible && index > -1 ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP;
             }
@@ -102,13 +100,25 @@ export function isNeedTranslatable(text: string) {
     // 定义正则表达式，匹配符号、空白符、数字和表情
     const pattern = /^[\s\d@/\.\*\+\-\?\ud83c \udf00-\udfff \ud83d \udc00-\ude4f \ude80-\udeff \u2600-\u2B55 \u2764\uFE0F]+$/
     // 使用正则表达式进行匹配
-    return !pattern.test(text);
+    let bool1 = !pattern.test(text);
+    return bool1;
+
 }
 // 判断元素是否在可见区域内的辅助函数
 function isElementInViewport(el: HTMLElement): boolean {
     const viewPortHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-    const top = el.getBoundingClientRect() && el.getBoundingClientRect().top
-    return top <= viewPortHeight + 100
+    const top = el.getBoundingClientRect() && el.getBoundingClientRect().top;
+
+    let bool1= top <= viewPortHeight + 100
+    if(!bool1)return false;
+    let computedStyle=getComputedStyle(el);
+
+    let bool2=computedStyle.display!="none";
+    if(!bool2)return false;
+
+    let bool3=computedStyle.visibility!="hidden";
+    if(!bool3)return false;
+    return true;
 }
 
 
