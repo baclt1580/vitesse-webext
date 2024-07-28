@@ -39,14 +39,64 @@ let langMap = {
     "ms": "马来语",        // 20 million speakers
     "tl": "塔加拉族语（菲律宾语）" // 28 million speakers
 };
-export const langList = Object.keys(langMap).map(key=>{
-   let lang= langs.all().find(item=>item[1]==key) as Language;
-    return{
+export type langWithZh = {
+    lang: Language;
+    zh: string;
+}
+export const langList:langWithZh[] = Object.keys(langMap).map(key => {
+    let lang = langs.all().find(item => item[1] == key) as Language;
+    return {
         lang,
-        zh:(langMap as any)[key] as string
+        zh: (langMap as any)[key] as string
     }
 })
 
 export function getZhLang(code: string) {
     return (langMap as any)[code] || null;
+}
+
+export function getLangWithZh(code:string){
+    return langList.find(item=>{
+       return item.lang[1]==code
+    })
+}
+const iso6393ToIso6391: any = {
+    'cmn': 'zh',  // 普通话
+    'eng': 'en',  // 英语
+    'spa': 'es',  // 西班牙语
+    'ara': 'ar',  // 阿拉伯语
+    'hin': 'hi',  // 印地语
+    'ben': 'bn',  // 孟加拉语
+    'por': 'pt',  // 葡萄牙语
+    'rus': 'ru',  // 俄语
+    'jpn': 'ja',  // 日语
+    'deu': 'de',  // 德语
+    'fra': 'fr',  // 法语
+    'kor': 'ko',  // 韩语
+    'vie': 'vi',  // 越南语
+    'ita': 'it',  // 意大利语
+    'tur': 'tr',  // 土耳其语
+    'tam': 'ta',  // 泰米尔语
+    'urd': 'ur',  // 乌尔都语
+    'fas': 'fa',  // 波斯语
+    'pol': 'pl',  // 波兰语
+    'ukr': 'uk',  // 乌克兰语
+    'ron': 'ro',  // 罗马尼亚语
+    'nld': 'nl',  // 荷兰语
+    'ell': 'el',  // 希腊语
+    'swe': 'sv',  // 瑞典语
+    'fin': 'fi',  // 芬兰语
+    'hun': 'hu',  // 匈牙利语
+    'tha': 'th',  // 泰语
+    'heb': 'he',  // 希伯来语
+    'ind': 'id',  // 印尼语
+    'msa': 'ms',  // 马来语
+    // 可以根据需要添加更多映射
+};
+export function getLangByl3(code: string) {
+    let l1 = iso6393ToIso6391[code]
+    let lang = langList.find(item => {
+        return item.lang[1] == l1
+    });
+    return lang;
 }

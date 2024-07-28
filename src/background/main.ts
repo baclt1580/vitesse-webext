@@ -23,7 +23,6 @@ if (import.meta.hot) {
 // })
 //初始化
 ; (async () => {
-  await clearPageStorage()
   initContainer()
   let { init: initActiveTabId } = useActiveTabId()
   initActiveTabId()
@@ -33,8 +32,12 @@ if (import.meta.hot) {
 browser.runtime.onInstalled.addListener(async () => {
   console.log("安装了")
 })
+browser.runtime.onStartup.addListener(() => {
+  clearPageStorage()
+})
 //清理所有的页面级缓存
 async function clearPageStorage() {
+  console.log("清楚page缓存")
   let items = await browser.storage.local.get(null);
   if (chrome.runtime.lastError) {
     console.error("获取数据时出错:", chrome.runtime.lastError);

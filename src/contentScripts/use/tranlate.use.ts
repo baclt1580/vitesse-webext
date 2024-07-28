@@ -1,7 +1,7 @@
 import { TextNode } from "~/background/translator/Translate.abstract";
 import { generateVisibleWrappers, generateAllWrappers } from "../render/wrapper.util";
 import { Md5 } from "ts-md5";
-import { onScrollDown, splitContentsByLength } from "../render/translator.util";
+import { onScroll, splitContentsByLength } from "../render/translator.util";
 import { showMode, translateSetting } from "~/common/storage/translateSetting.use";
 import { translateStatus } from "~/common/storage/translateStatus.use";
 import { sendMessage } from "webext-bridge/content-script";
@@ -30,13 +30,11 @@ const translateItems: Ref<TranlateItem[]> = ref([])
 //生成翻译节点->翻译->调用render渲染
 let unListen: any;
 function translateVisible() {
-    console.log("翻译visible")
     let isBottom = translateSetting.value.showMode == "bottom";
     let wrappers = generateVisibleWrappers(isBottom);
     tranlsateByWrapper(wrappers)
     translateStatus.value = "translating";
-    unListen = onScrollDown(() => {
-        console.log("滑动")
+    unListen = onScroll(() => {
         let wrappers = generateVisibleWrappers(isBottom);
         tranlsateByWrapper(wrappers)
     })
@@ -53,7 +51,6 @@ function stopTranslate() {
 
 //翻译全部
 async function translateAll() {
-    console.log("翻译all")
     let wrappers = generateAllWrappers()
     translateStatus.value = "translating";
     await tranlsateByWrapper(wrappers)

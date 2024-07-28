@@ -75,7 +75,7 @@
     "@firebase/auth": "^1.7.4",
     "axios": "^1.7.2",
     "firebase": "^10.12.2",
-    "franc": "^6.2.0",
+    "franc-min": "^6.2.0",
     "langs-es": "^4.0.2",
     "lodash-es": "^4.17.21",
     "normalize.css": "^8.0.1",
