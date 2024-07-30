@@ -78,7 +78,7 @@ function tranlsateByWrapper(wrappers: HTMLElement[]) {
             originText: wrapper.innerHTML
         }
     })
-    let textNodeChunks = splitContentsByLength(textNodes, 2000);
+    let textNodeChunks = splitContentsByLength(textNodes, 1000);
     let pros = textNodeChunks.map(async textNodes => {
         let currentItems = textNodes.map(node => items.find(item => item.hash == node.hash)).filter(item => !!item) as TranlateItem[];
         translateItems.value.push(...currentItems)

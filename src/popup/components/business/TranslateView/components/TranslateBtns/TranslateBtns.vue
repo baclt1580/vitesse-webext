@@ -17,7 +17,7 @@ async function doStopTranslate() {
     sendMessage("stopTranslate", null, `content-script@${activeTab.id}`)
 }
 let isNotNeedTranslate=ref(false)
-watch(currentLang,()=>{
+watch([()=>currentLang,()=>translateSetting.value.to],()=>{
     isNotNeedTranslate.value=currentLang.value?.lang[1]==translateSetting.value.to;
 },{
     immediate:true

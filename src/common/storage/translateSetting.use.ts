@@ -15,6 +15,8 @@ export type TranslateSetting = {
     from: string,
     //1版code
     to: string
+    //额外prompt
+    prompt:string
 }
 let defaultSetting = (): TranslateSetting => {
     return {
@@ -22,7 +24,8 @@ let defaultSetting = (): TranslateSetting => {
         rangeRange: "visible",
         translator: "gpt",
         from: "auto",
-        to: navigator.language.split('-')[0]
+        to: navigator.language.split('-')[0],
+        prompt:""
     }
 };
 export const translateSetting=useWebExtensionStoragePage<TranslateSetting>("translateSetting",defaultSetting);

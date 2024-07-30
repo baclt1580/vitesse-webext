@@ -1,4 +1,4 @@
-import { bufferCount, catchError, concatMap, firstValueFrom, from, mergeMap, Observable, of, retry, Subscriber, timeout } from "rxjs";
+import { catchError, firstValueFrom, from, mergeMap, Observable, retry, Subscriber, timeout } from "rxjs";
 import { fromFetch } from 'rxjs/fetch';
 import { config } from "../config/config";
 
@@ -7,7 +7,7 @@ let observer=new Observable<{msg:string,systemMsg?:string,resolve:any}>(sub=>{
     subscriber=sub;
 }).pipe(mergeMap(item=>{
     return from(sendOpenAiMessageInternal(item.msg,item.resolve,item.systemMsg))
-},5)).subscribe()
+},8)).subscribe()
 
 export async function sendOpenAiMessage(msg: string, systemMsg?: string) {
     return new Promise<string>(resolve=>{
@@ -16,7 +16,6 @@ export async function sendOpenAiMessage(msg: string, systemMsg?: string) {
 }
 
 async function sendOpenAiMessageInternal(msg: string,resolve:any, systemMsg?: string) {
-    console.log("翻译")
     let payload = {
         model: config.gpt.model,
         "messages": [

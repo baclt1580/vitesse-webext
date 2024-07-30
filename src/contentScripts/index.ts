@@ -8,7 +8,6 @@ import "normalize.css";
 import { controller } from './controller/controller'
 import { translateStatus } from '~/common/storage/translateStatus.use';
 import { useActiveTabId } from '~/common/use/useActiveTabId.use'
-import { sendMessage } from 'webext-bridge/content-script'
 // Firefox `browser.tabs.executeScript()` requires scripts return a primitive value
 let {tabOK}=useActiveTabId();
 (async () => {
